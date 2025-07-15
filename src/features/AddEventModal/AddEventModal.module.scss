@@ -1,0 +1,20 @@
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background-color: var(--gray-scale-1);
+    border-radius: 8px;
+    width: 400px;
+
+    textarea {
+        font-family: inherit;
+        font-size: 14px;
+        padding: 8px 12px;
+        border: 1px solid var(--gray-scale-4);
+        border-radius: 4px;
+        resize: vertical;
+        min-height: 80px;
+    }
+}

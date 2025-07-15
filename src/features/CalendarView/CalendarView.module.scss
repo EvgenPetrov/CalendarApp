@@ -1,0 +1,37 @@
+.calendar {
+    display: flex;
+    flex-direction: column;
+}
+
+.board {
+    background: var(--gray-scale-1);
+    border: 1px solid var(--gray-scale-3);
+    border-radius: 8px;
+    padding: 16px 24px;
+    overflow: hidden;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+}
+
+.weekday {
+    padding: 8px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--gray-scale-9);
+
+    &:first-child,
+    &:last-child {
+        color: var(--red-7);
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}

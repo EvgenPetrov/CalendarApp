@@ -1,0 +1,44 @@
+.select {
+    position: relative;
+    width: 220px;
+}
+
+.select__input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+}
+
+.select__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    margin-top: 4px;
+    background-color: var(--gray-scale-1);
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    overflow-y: auto;
+    z-index: 1002;
+}
+
+.select__item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: var(--primary-1);
+    }
+}
+
+.select__loading {
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-scale-6);
+}

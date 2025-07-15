@@ -1,0 +1,13 @@
+.date-picker {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    transition: border-color 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: var(--primary-4);
+    }
+}
