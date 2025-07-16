@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+// src/features/CalendarView/CalendarView.jsx
+import React, { useState, useMemo } from "react";
 import { useDayStatuses, useAppointments } from "../../app/api/hooks";
 import MonthNavigator from "./MonthNavigator";
 import DayCell from "./DayCell";
@@ -19,20 +20,19 @@ export default function CalendarView({ onDayClick, onFilterClick }) {
         perPage: 100,
     });
 
-    // Группируем фактические апойнтменты по дню
+    // Группируем по UTC-дню, чтобы не было локального смещения
     const eventsByDay = useMemo(() => {
         const m = {};
         apptsData.data.forEach((a) => {
-            const d = new Date(a.at).getDate();
+            const d = new Date(a.at).getUTCDate();
             if (!m[d]) m[d] = [];
             m[d].push(a);
         });
         return m;
     }, [apptsData]);
 
-    //  35 ячеек, передаём в них ивенты массива
     const cells = useMemo(() => {
-        const firstWeekday = new Date(current.year, current.month, 1).getDay(); // 0=Sun
+        const firstWeekday = new Date(current.year, current.month, 1).getDay();
         const daysInMonth = new Date(current.year, current.month + 1, 0).getDate();
         const daysInPrev = new Date(current.year, current.month, 0).getDate();
         const total = 35;
@@ -66,22 +66,7 @@ export default function CalendarView({ onDayClick, onFilterClick }) {
             />
 
             <div className={styles.board}>
-                <div className={styles.weekdays}>
-                    {[
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                    ].map((d) => (
-                        <div key={d} className={styles.weekday}>
-                            {d}
-                        </div>
-                    ))}
-                </div>
-
+                {/* …неделя… */}
                 <div className={styles.grid}>
                     {cells.map(({ date, day, status, events, disabled }, i) => (
                         <DayCell

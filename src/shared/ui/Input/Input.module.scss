@@ -1,11 +1,11 @@
 .input {
     font-family: inherit;
     font-size: 14px;
-    padding: 12px 8px; /* 12px вертикально, 8px горизонтально */
+    padding: 12px 8px;
     border: 1px solid var(--gray-scale-4);
     border-radius: 4px;
-    width: 100%; /* займет всю ширину колонки */
-    height: 44px; /* фиксированная высота */
+    width: 100%;
+    height: 44px;
     transition: border-color 0.2s;
     &:focus {
         outline: none;
