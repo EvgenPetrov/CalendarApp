@@ -1,5 +1,4 @@
-// src/features/ListView/ListView.jsx
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAppointments } from "../../app/api/hooks";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import Pagination from "./Pagination";
@@ -13,7 +12,6 @@ export default function ListView({ filters, onFilterClick }) {
     const [search, setSearch] = useState("");
     const [range, setRange] = useState({ from: null, to: null });
 
-    // --- строим since/until для API ---
     let since, until;
     if (range.from) {
         const f = new Date(range.from);
@@ -24,7 +22,7 @@ export default function ListView({ filters, onFilterClick }) {
         until = t.toISOString();
     }
 
-    // загружаем сырые апойнтменты (без локального поиска)
+    
     const { data, isLoading } = useAppointments({
         page,
         perPage: 10,
@@ -33,7 +31,7 @@ export default function ListView({ filters, onFilterClick }) {
         ...(since ? { since, until } : {}),
     });
 
-    // мапим данные в удобный массив
+    
     const rows = useMemo(
         () =>
             (data?.data || []).map((a) => ({
@@ -53,7 +51,7 @@ export default function ListView({ filters, onFilterClick }) {
         [data]
     );
 
-    // локально фильтруем по name, service и masterName
+   
     const filteredRows = useMemo(() => {
         const q = search.trim().toLowerCase();
         if (!q) return rows;

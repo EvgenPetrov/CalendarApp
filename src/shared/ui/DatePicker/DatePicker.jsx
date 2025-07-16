@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FiCalendar, FiX } from "react-icons/fi";
@@ -7,7 +7,6 @@ import ArrowRightIcon from "../../icons/arrow-right.svg?react";
 import cn from "classnames";
 import styles from "./DatePicker.module.scss";
 
-/** шапка календаря из вашего макета */
 function CustomCaption({ date, onPreviousClick, onNextClick }) {
     return (
         <div className={styles.caption}>
@@ -24,13 +23,6 @@ function CustomCaption({ date, onPreviousClick, onNextClick }) {
     );
 }
 
-/**
- * props:
- * - mode: "range" | "single"
- * - initialRange: {from:Date|null, to:Date|null}
- * - onSelectRange: ({from,to})=>void
- * - placeholder, error, renderToggle
- */
 export default function DatePicker({
     mode = "range",
     initialRange = { from: null, to: null },

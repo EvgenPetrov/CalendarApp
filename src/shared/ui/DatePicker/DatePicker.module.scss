@@ -1,10 +1,10 @@
-/* DatePicker.module.scss */
+
 .wrapper {
     position: relative;
     display: inline-block;
 }
 
-/* === Toggle button === */
+
 .toggle {
     display: inline-flex;
     align-items: center;
@@ -19,15 +19,15 @@
     transition: background 0.2s, border-color 0.2s;
 }
 
-/* когда открыт, но без диапазона */
+
 .activeOutline {
     border-color: var(--primary-4);
 }
 
-/* состояние с выбранным диапазоном */
+
 .selected {
-    width: auto; /* растягиваем под текст */
-    padding: 0 8px; /* горизонтальный padding */
+    width: auto; 
+    padding: 0 8px; 
     background: var(--gray-scale-3);
 }
 
@@ -45,7 +45,7 @@
     color: var(--gray-scale-9);
 }
 
-/* === Popover === */
+
 .popover {
     position: absolute;
     top: calc(100% + 4px);
@@ -58,19 +58,18 @@
     padding-bottom: 16px;
 }
 
-/* === Кастомная шапка === */
-/* убираем позиционирование */
+
 .caption {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* стрелки по краям */
+    justify-content: space-between; 
     padding: 10px 27px 5px 27px;
     width: 100%;
 }
 
 .captionLabel {
-    flex: 1; /* занимает всё свободное место */
-    text-align: center; /* текст ровно по центру */
+    flex: 1; 
+    text-align: center; 
     font-family: var(--font-primary);
     font-weight: 600;
     font-size: 14px;
@@ -106,7 +105,7 @@
     stroke: var(--primary-6);
 }
 
-/* === Кнопки Clear/Submit === */
+
 .actions {
     display: flex;
     justify-content: space-between;

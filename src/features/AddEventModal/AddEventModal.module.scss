@@ -1,4 +1,4 @@
-/* AddEventModal.module.scss */
+
 .form {
     display: flex;
     flex-direction: column;
@@ -7,13 +7,13 @@
     box-sizing: border-box;
 }
 
-/* Каждый «ряд» — flex-контейнер */
+
 .row {
     display: flex;
     gap: 16px;
 }
 
-/* Иконка всегда 32×68 */
+
 .icon {
     flex: 0 0 32px;
     height: 68px;
@@ -24,26 +24,26 @@
     border-radius: 6px;
 }
 
-/* Поле занимает оставшееся место */
+
 .field {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* Иногда нужен «пустой» спейсер для выравнивания */
+
 .spacer {
     flex: 0 0 32px;
 }
 
-/* Общий стиль для <label> */
+
 .label {
     margin-bottom: 4px;
     font-size: 14px;
     color: var(--gray-scale-9);
 }
 
-/* Инпуты и селекты */
+
 input[type="text"],
 input[type="time"],
 :global(.select__input) {
@@ -63,7 +63,7 @@ input:focus,
     border-color: var(--primary-4);
 }
 
-/* Группа статусов */
+
 .statusGroup {
     flex: 1;
     display: flex;
@@ -89,7 +89,7 @@ input:focus,
     height: 16px;
 }
 
-/* Notes */
+
 .notesWrapper {
     flex: 1;
     display: flex;
@@ -106,7 +106,7 @@ input:focus,
     box-sizing: border-box;
 }
 
-/* Footer с кнопкой Save */
+
 .footer {
     margin-top: auto;
     padding-bottom: 32px;

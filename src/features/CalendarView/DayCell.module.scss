@@ -1,5 +1,4 @@
 .cell {
-    /* теперь бордер, размер и box-sizing работают чётко */
     box-sizing: border-box;
     width: 174px;
     height: 120px;
@@ -36,12 +35,10 @@
     }
 }
 
-/* прячет базовый номер дня */
 .hidden {
     visibility: hidden;
 }
 
-/* обычный номер */
 .day {
     font-family: var(--font-primary);
     font-weight: 500;
@@ -50,7 +47,6 @@
     color: var(--gray-scale-9);
 }
 
-/* Today-маркер (обёртка флага + текста) */
 .todayMark {
     position: absolute;
     top: 8px;
@@ -61,7 +57,6 @@
     z-index: 2;
 }
 
-/* сам цветной флаг со скосом вниз справа */
 .todayFlag {
     display: inline-flex;
     align-items: center;
@@ -69,12 +64,7 @@
     width: 100%;
     height: 42px;
     background: var(--primary-4);
-    clip-path: polygon(
-        0 0,
-        /* верхний-левый */ 100% 0,
-        /* верхний-правый */ 100% 100%,
-        /* нижний-правый */ 0 calc(100% - 8px) /* нижний-левый смещён вверх на 8px */
-    );
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 8px));
 
     font-family: var(--font-primary);
     font-weight: 500;
@@ -83,7 +73,6 @@
     color: #fff;
 }
 
-/* надпись «Today» справа от флага */
 .todayLabel {
     margin-left: 6px;
     font-family: var(--font-primary);
@@ -93,7 +82,6 @@
     color: var(--primary-4);
 }
 
-/* статус Closed / Blocked */
 .status {
     position: absolute;
     top: 8px;
@@ -108,10 +96,6 @@
     color: var(--gray-scale-9);
 }
 
-/* DayCell.module.scss */
-
-/* … ваши старые стили оставляем без изменений … */
-
 .events {
     margin-top: 10px;
     display: flex;
@@ -121,14 +105,12 @@
     overflow: hidden;
 }
 
-/* Сохраняем вертикальный стек */
 .eventsRow {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-/* Одна карточка события */
 .eventRow {
     display: flex;
     align-items: center;
@@ -144,13 +126,11 @@
     text-overflow: ellipsis;
 }
 
-/* Время */
 .eventTime {
     font-weight: 500;
     color: var(--gray-scale-7);
 }
 
-/* Имя */
 .eventName {
     font-weight: 500;
     color: var(--gray-scale-9);
@@ -158,7 +138,6 @@
     text-overflow: ellipsis;
 }
 
-/* + N More */
 .more {
     padding: 4px 6px;
     height: 24px;
@@ -167,7 +146,6 @@
     color: var(--primary-7);
 }
 
-/* Цвета по статусу */
 .event--new {
     background: var(--green-1);
     border-color: var(--green-6);

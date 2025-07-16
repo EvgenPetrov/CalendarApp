@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import CalendarView from "../../features/CalendarView/CalendarView";
 import ListView from "../../features/ListView/ListView";
 import AddEventModal from "../../features/AddEventModal/AddEventModal";
@@ -56,11 +56,7 @@ export default function MainPage() {
                 )}
             </div>
 
-            {/*
-              Чтобы useForm.defaultValues в AddEventModal
-              всегда брали «свежую» initialDate на первый рендер,
-              даём самому React «ключ», привязанный к дате.
-            */}
+           
             <AddEventModal
                 key={initialDate ? initialDate.toISOString() : "today"}
                 isOpen={eventOpen}

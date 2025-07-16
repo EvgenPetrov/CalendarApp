@@ -1,5 +1,5 @@
-// src/shared/ui/Select/Select.jsx
-import React, { useState, useRef, useEffect } from "react";
+
+import  { useState, useRef, useEffect } from "react";
 import { motion as Motion } from "framer-motion";
 import { FiChevronDown, FiChevronUp, FiX } from "react-icons/fi";
 import styles from "./Select.module.scss";
@@ -10,13 +10,13 @@ export function Select({ placeholder, hook, value, onChange }) {
     const containerRef = useRef();
     const listRef = useRef();
 
-    // подгрузка страниц
+    
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = hook({
         search: query,
     });
     const items = data?.pages.flatMap((p) => p.data) || [];
 
-    // infinite scroll
+    
     useEffect(() => {
         const el = listRef.current;
         if (!el) return;
@@ -29,7 +29,7 @@ export function Select({ placeholder, hook, value, onChange }) {
         return () => el.removeEventListener("scroll", onScroll);
     }, [hasNextPage, fetchNextPage]);
 
-    // click outside
+   
     useEffect(() => {
         const handler = (e) => {
             if (
@@ -44,13 +44,12 @@ export function Select({ placeholder, hook, value, onChange }) {
         return () => document.removeEventListener("mousedown", handler);
     }, [open]);
 
-    // что показывать в поле: либо ввод пользователя, либо имя value
+   
     const display = open ? query : value?.name || "";
 
     const toggleOpen = () => setOpen((o) => !o);
     const clearQuery = () => {
         setQuery("");
-        // если чистим уже выбранное value, сбросим value
         onChange(null);
         setOpen(true);
     };

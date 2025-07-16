@@ -1,5 +1,5 @@
-// src/features/ListView/Filters.jsx
-import React, { useState, useEffect } from "react";
+
+import  { useState, useEffect } from "react";
 import { FiRotateCw, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useInfiniteMasters, useInfiniteServices } from "../../app/api/hooks";
 import { Input } from "../../shared/ui/Input/Input";
@@ -54,14 +54,14 @@ export default function Filters({ initialMasters, initialServices, onApply }) {
 
     return (
         <div className={styles.root}>
-            {/* Сбрасываем все — перенесли наверх */}
+           
             <div className={styles.header}>
                 <button onClick={resetAll} className={styles.resetAll}>
                     <FiRotateCw /> Reset all
                 </button>
             </div>
 
-            {/* Masters */}
+           
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <span>Masters</span>
@@ -111,7 +111,7 @@ export default function Filters({ initialMasters, initialServices, onApply }) {
                 )}
             </div>
 
-            {/* Services */}
+         
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <span>Services</span>
@@ -161,7 +161,7 @@ export default function Filters({ initialMasters, initialServices, onApply }) {
                 )}
             </div>
 
-            {/* Только Show results на всю ширину */}
+            
             <div className={styles.footer}>
                 <Button
                     variant="primary"
