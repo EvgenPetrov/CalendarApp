@@ -2,10 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useAppointments } from "../../app/api/hooks";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import Pagination from "./Pagination";
+import ViewHeader from "../../shared/ui/ViewHeader/ViewHeader";
 import cn from "classnames";
 import styles from "./ListView.module.scss";
 
-export default function ListView({ filters }) {
+export default function ListView({ filters, onFilterClick }) {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [range, setRange] = useState({ from: null, to: null });
@@ -22,7 +23,7 @@ export default function ListView({ filters }) {
 
     const rows = useMemo(
         () =>
-            data?.data.map((a) => ({
+            (data?.data || []).map((a) => ({
                 id: a.id,
                 name: a.customerName,
                 datetime: new Date(a.at).toLocaleString("en-US", {
@@ -34,14 +35,15 @@ export default function ListView({ filters }) {
                 service: a.service.name,
                 master: a.master.name,
                 status: a.status,
-            })) || [],
+            })),
         [data]
     );
+
     const total = data?.total || 0;
 
     return (
         <div className={styles.list}>
-            <h2 className={styles.title}>Orders</h2>
+            <ViewHeader title="Orders" onFilterClick={onFilterClick} />
 
             <div className={styles.tableWrapper}>
                 <div className={styles.tableToolbar}>

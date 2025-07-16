@@ -1,27 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiRotateCw, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useInfiniteMasters, useInfiniteServices } from "../../app/api/hooks";
 import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
 import styles from "./Filters.module.scss";
 
-export default function Filters({
-    selectedMasters,
-    selectedServices,
-    onChangeMasters,
-    onChangeServices,
-    onApply,
-}) {
+export default function Filters({ initialMasters, initialServices, onApply, onCancel }) {
+    const [localMasters, setLocalMasters] = useState(initialMasters);
+    const [localServices, setLocalServices] = useState(initialServices);
+
     const [mastersExpanded, setMastersExpanded] = useState(true);
-    const [servicesExpanded, setServicesExpanded] = useState(false);
     const [searchMasters, setSearchMasters] = useState("");
+    const [servicesExpanded, setServicesExpanded] = useState(false);
     const [searchServices, setSearchServices] = useState("");
+
+    useEffect(() => {
+        setLocalMasters(initialMasters);
+        setLocalServices(initialServices);
+    }, [initialMasters, initialServices]);
 
     const {
         data: mastersPages,
         fetchNextPage: fetchMoreMasters,
         hasNextPage: hasMoreMasters,
     } = useInfiniteMasters({ search: searchMasters });
+
     const {
         data: servicesPages,
         fetchNextPage: fetchMoreServices,
@@ -31,24 +34,19 @@ export default function Filters({
     const masters = mastersPages?.pages.flatMap((p) => p.data) || [];
     const services = servicesPages?.pages.flatMap((p) => p.data) || [];
 
-    const toggleMaster = (id) => {
-        const next = selectedMasters.includes(id)
-            ? selectedMasters.filter((x) => x !== id)
-            : [...selectedMasters, id];
-        onChangeMasters(next);
-    };
-    const toggleService = (id) => {
-        const next = selectedServices.includes(id)
-            ? selectedServices.filter((x) => x !== id)
-            : [...selectedServices, id];
-        onChangeServices(next);
-    };
+    const toggleMaster = (id) =>
+        setLocalMasters((ms) =>
+            ms.includes(id) ? ms.filter((x) => x !== id) : [...ms, id]
+        );
 
-    const resetMasters = () => onChangeMasters([]);
-    const resetServices = () => onChangeServices([]);
+    const toggleService = (id) =>
+        setLocalServices((ss) =>
+            ss.includes(id) ? ss.filter((x) => x !== id) : [...ss, id]
+        );
+
     const resetAll = () => {
-        resetMasters();
-        resetServices();
+        setLocalMasters([]);
+        setLocalServices([]);
     };
 
     return (
@@ -64,13 +62,15 @@ export default function Filters({
                 <div className={styles.header}>
                     <span>Masters</span>
                     <div className={styles.controls}>
-                        {selectedMasters.length > 0 && (
-                            <button onClick={resetMasters} className={styles.resetBtn}>
+                        {localMasters.length > 0 && (
+                            <button
+                                onClick={() => setLocalMasters([])}
+                                className={styles.resetBtn}>
                                 <FiRotateCw /> Reset
                             </button>
                         )}
                         <button
-                            onClick={() => setMastersExpanded((e) => !e)}
+                            onClick={() => setMastersExpanded((v) => !v)}
                             className={styles.toggleBtn}>
                             {mastersExpanded ? <FiChevronUp /> : <FiChevronDown />}
                         </button>
@@ -80,7 +80,7 @@ export default function Filters({
                     <>
                         <Input
                             className={styles.search}
-                            placeholder="Search"
+                            placeholder="Search masters…"
                             value={searchMasters}
                             onChange={setSearchMasters}
                         />
@@ -89,7 +89,7 @@ export default function Filters({
                                 <label key={m.id} className={styles.item}>
                                     <input
                                         type="checkbox"
-                                        checked={selectedMasters.includes(m.id)}
+                                        checked={localMasters.includes(m.id)}
                                         onChange={() => toggleMaster(m.id)}
                                     />
                                     {m.name}
@@ -112,13 +112,15 @@ export default function Filters({
                 <div className={styles.header}>
                     <span>Services</span>
                     <div className={styles.controls}>
-                        {selectedServices.length > 0 && (
-                            <button onClick={resetServices} className={styles.resetBtn}>
+                        {localServices.length > 0 && (
+                            <button
+                                onClick={() => setLocalServices([])}
+                                className={styles.resetBtn}>
                                 <FiRotateCw /> Reset
                             </button>
                         )}
                         <button
-                            onClick={() => setServicesExpanded((e) => !e)}
+                            onClick={() => setServicesExpanded((v) => !v)}
                             className={styles.toggleBtn}>
                             {servicesExpanded ? <FiChevronUp /> : <FiChevronDown />}
                         </button>
@@ -128,7 +130,7 @@ export default function Filters({
                     <>
                         <Input
                             className={styles.search}
-                            placeholder="Search"
+                            placeholder="Search services…"
                             value={searchServices}
                             onChange={setSearchServices}
                         />
@@ -137,7 +139,7 @@ export default function Filters({
                                 <label key={s.id} className={styles.item}>
                                     <input
                                         type="checkbox"
-                                        checked={selectedServices.includes(s.id)}
+                                        checked={localServices.includes(s.id)}
                                         onChange={() => toggleService(s.id)}
                                     />
                                     {s.name}
@@ -155,9 +157,15 @@ export default function Filters({
                 )}
             </div>
 
+            {/* Apply / Cancel */}
             <div className={styles.footer}>
-                <Button variant="primary" onClick={onApply}>
+                <Button
+                    variant="primary"
+                    onClick={() => onApply(localMasters, localServices)}>
                     Show results
+                </Button>
+                <Button variant="ghost" onClick={onCancel}>
+                    Cancel
                 </Button>
             </div>
         </div>

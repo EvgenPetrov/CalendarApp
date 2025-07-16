@@ -1,12 +1,10 @@
-import axios from "axios";
 import {
     useQuery,
     useInfiniteQuery,
     useMutation,
     useQueryClient,
 } from "@tanstack/react-query";
-
-const api = axios.create({ baseURL: "http://localhost:4000" });
+import { api } from "./axios";
 
 // ===== Дни месяца =====
 export function useDayStatuses(year, month) {
@@ -15,7 +13,7 @@ export function useDayStatuses(year, month) {
         queryFn: () =>
             api
                 .get("/day-statuses", { params: { year, month } })
-                .then((res) => res.data.data),
+                .then((r) => r.data.data),
     });
 }
 
@@ -29,25 +27,17 @@ export function useAppointments({
     page,
     perPage,
 }) {
+    // собираем только непустые параметры
+    const params = { page, perPage };
+    if (since) params.since = since;
+    if (until) params.until = until;
+    if (search) params.search = search;
+    if (masterIds?.length) params.masterIds = masterIds;
+    if (serviceIds?.length) params.serviceIds = serviceIds;
+
     return useQuery({
-        queryKey: [
-            "appointments",
-            { since, until, search, masterIds, serviceIds, page, perPage },
-        ],
-        queryFn: () =>
-            api
-                .get("/appointments", {
-                    params: {
-                        since,
-                        until,
-                        search,
-                        masterIds,
-                        serviceIds,
-                        page,
-                        perPage,
-                    },
-                })
-                .then((res) => res.data),
+        queryKey: ["appointments", params],
+        queryFn: () => api.get("/appointments", { params }).then((r) => r.data),
         keepPreviousData: true,
     });
 }
@@ -56,8 +46,7 @@ export function useAppointments({
 export function useCreateAppointment() {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (data) =>
-            api.post("/appointments", data).then((res) => res.data.data),
+        mutationFn: (data) => api.post("/appointments", data).then((r) => r.data.data),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: ["appointments"] });
             qc.invalidateQueries({ queryKey: ["dayStatuses"] });
@@ -65,7 +54,7 @@ export function useCreateAppointment() {
     });
 }
 
-// ===== Masters/Services для селектов (infinite scroll) =====
+// ===== Infinite Masters/Services =====
 function makeInfiniteHook(url) {
     return ({ search }) =>
         useInfiniteQuery({
@@ -73,9 +62,9 @@ function makeInfiniteHook(url) {
             queryFn: ({ pageParam = 1 }) =>
                 api
                     .get(`/${url}`, { params: { search, page: pageParam, perPage: 10 } })
-                    .then((res) => res.data),
-            getNextPageParam: (lastPage, allPages) =>
-                allPages.length * 10 < lastPage.total ? allPages.length + 1 : undefined,
+                    .then((r) => r.data),
+            getNextPageParam: (lastPage, all) =>
+                all.length * 10 < lastPage.total ? all.length + 1 : undefined,
         });
 }
 

@@ -1,68 +1,72 @@
 import React, { useState, useMemo } from "react";
 import { useDayStatuses, useAppointments } from "../../app/api/hooks";
-import MonthNavigator from "./MonthNavigator";
+import MonthNavigator from "../../shared/ui/MonthNavigator/MonthNavigator";
 import DayCell from "./DayCell";
+import ViewHeader from "../../shared/ui/ViewHeader/ViewHeader";
 import styles from "./CalendarView.module.scss";
 
-export default function CalendarView({ onDayClick, filters }) {
+export default function CalendarView({ onDayClick, filters, onFilterClick }) {
     const today = new Date();
-    const [current, setCurrent] = useState({
+    const [cal, setCal] = useState({
         year: today.getFullYear(),
         month: today.getMonth(),
     });
 
-    const { data: statuses = [] } = useDayStatuses(current.year, current.month);
-    const { data: apptsData = { data: [] } } = useAppointments({
-        since: new Date(current.year, current.month, 1).toISOString(),
-        until: new Date(current.year, current.month + 1, 0).toISOString(),
+    const { data: statuses = [] } = useDayStatuses(cal.year, cal.month);
+    const { data: apptsRes = { data: [] } } = useAppointments({
+        since: new Date(cal.year, cal.month, 1).toISOString(),
+        until: new Date(cal.year, cal.month + 1, 0).toISOString(),
         page: 1,
         perPage: 100,
         masterIds: filters.masters,
         serviceIds: filters.services,
     });
 
-    // Группируем по дню (UTC)
+    // сгруппировать по дню
     const eventsByDay = useMemo(() => {
-        const m = {};
-        apptsData.data.forEach((a) => {
+        const map = {};
+        apptsRes.data.forEach((a) => {
             const d = new Date(a.at).getUTCDate();
-            if (!m[d]) m[d] = [];
-            m[d].push(a);
+            map[d] = map[d] || [];
+            map[d].push(a);
         });
-        return m;
-    }, [apptsData]);
+        return map;
+    }, [apptsRes]);
 
-    // Строим ячейки календаря
+    // собрать все ячейки месяца
     const cells = useMemo(() => {
-        const firstWeekday = new Date(current.year, current.month, 1).getDay();
-        const daysInMonth = new Date(current.year, current.month + 1, 0).getDate();
-        const daysInPrev = new Date(current.year, current.month, 0).getDate();
+        const firstDow = new Date(cal.year, cal.month, 1).getDay();
+        const daysIn = new Date(cal.year, cal.month + 1, 0).getDate();
+        const daysPrev = new Date(cal.year, cal.month, 0).getDate();
         const total = 35;
 
-        return Array.from({ length: total }, (_, idx) => {
-            const offset = idx - firstWeekday + 1;
+        return Array.from({ length: total }, (_, i) => {
+            const offset = i - firstDow + 1;
             let date, disabled;
             if (offset <= 0) {
-                date = new Date(current.year, current.month - 1, daysInPrev + offset);
+                date = new Date(cal.year, cal.month - 1, daysPrev + offset);
                 disabled = true;
-            } else if (offset > daysInMonth) {
-                date = new Date(current.year, current.month + 1, offset - daysInMonth);
+            } else if (offset > daysIn) {
+                date = new Date(cal.year, cal.month + 1, offset - daysIn);
                 disabled = true;
             } else {
-                date = new Date(current.year, current.month, offset);
+                date = new Date(cal.year, cal.month, offset);
                 disabled = false;
             }
+
             const day = date.getDate();
             const status = disabled ? "closed" : statuses[day - 1] || "working";
             const events = eventsByDay[day] || [];
             return { date, day, status, events, disabled };
         });
-    }, [current, statuses, eventsByDay]);
+    }, [cal, statuses, eventsByDay]);
 
     return (
         <div className={styles.calendar}>
-            <MonthNavigator current={current} onChange={setCurrent} />
-
+            <ViewHeader
+                leftControls={<MonthNavigator current={cal} onChange={setCal} />}
+                onFilterClick={onFilterClick}
+            />
             <div className={styles.board}>
                 <div className={styles.weekdays}>
                     {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((w, i) => (
@@ -76,9 +80,9 @@ export default function CalendarView({ onDayClick, filters }) {
                     ))}
                 </div>
                 <div className={styles.grid}>
-                    {cells.map(({ date, day, status, events, disabled }, i) => (
+                    {cells.map(({ date, day, status, events, disabled }, idx) => (
                         <DayCell
-                            key={i}
+                            key={idx}
                             date={date}
                             day={day}
                             status={status}

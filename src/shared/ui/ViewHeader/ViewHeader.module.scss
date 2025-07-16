@@ -1,0 +1,15 @@
+.header {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* ровно 16px между всеми элементами */
+    margin-bottom: 16px;
+}
+
+.title {
+    margin: 0;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 140%;
+    color: var(--gray-scale-8);
+}

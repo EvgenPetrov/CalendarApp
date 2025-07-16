@@ -2,14 +2,6 @@
     width: 100%;
 }
 
-.title {
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 24px;
-    margin: 0 0 16px;
-    color: var(--gray-scale-8);
-}
-
 .tableWrapper {
     background: var(--gray-scale-1);
     border: 1px solid var(--gray-scale-3);
@@ -69,6 +61,10 @@
         font-size: 14px;
         color: var(--gray-scale-8);
     }
+}
+
+.title {
+    display: none; /* заголовок теперь рисует ViewHeader */
 }
 
 .service {

@@ -5,7 +5,7 @@ import AddEventModal from "../../features/AddEventModal/AddEventModal";
 import Filters from "../../features/ListView/Filters";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
 import { Button } from "../../shared/ui/Button/Button";
-import { FiPlus, FiSliders } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import ViewToggle from "../../shared/ui/ViewToggle/ViewToggle";
 import styles from "./MainPage.module.scss";
 
@@ -15,13 +15,19 @@ export default function MainPage() {
     const [filtersOpen, setFiltersOpen] = useState(false);
     const [initialDate, setInitialDate] = useState(null);
 
-    // единое состояние фильтров
-    const [filterMasters, setFilterMasters] = useState([]); // массив ID мастеров
-    const [filterServices, setFilterServices] = useState([]); // массив ID услуг
+    const [filterMasters, setFilterMasters] = useState([]);
+    const [filterServices, setFilterServices] = useState([]);
 
+    // Открываем форму и префиллим дату
     const openNewEvent = (date = null) => {
-        setInitialDate(date);
+        setInitialDate(date || new Date());
         setEventOpen(true);
+    };
+
+    const applyFilters = (masters, services) => {
+        setFilterMasters(masters);
+        setFilterServices(services);
+        setFiltersOpen(false);
     };
 
     return (
@@ -29,36 +35,21 @@ export default function MainPage() {
             <div className={styles.content}>
                 <header className={styles.header}>
                     <ViewToggle view={view} onChange={setView} />
-
-                    {/* Кнопка открытия дровера фильтров */}
-                    <Button
-                        variant="secondary"
-                        className={styles.filterToggle}
-                        onClick={() => setFiltersOpen(true)}>
-                        <FiSliders />
-                        <span>Filters</span>
-                    </Button>
-
                     <Button variant="primary" onClick={() => openNewEvent()}>
-                        <FiPlus />
-                        <span>Add event</span>
+                        <FiPlus /> <span>Add event</span>
                     </Button>
                 </header>
 
                 {view === "calendar" ? (
                     <CalendarView
+                        filters={{ masters: filterMasters, services: filterServices }}
                         onDayClick={openNewEvent}
-                        filters={{
-                            masters: filterMasters,
-                            services: filterServices,
-                        }}
+                        onFilterClick={() => setFiltersOpen(true)}
                     />
                 ) : (
                     <ListView
-                        filters={{
-                            masters: filterMasters,
-                            services: filterServices,
-                        }}
+                        filters={{ masters: filterMasters, services: filterServices }}
+                        onFilterClick={() => setFiltersOpen(true)}
                     />
                 )}
             </div>
@@ -74,11 +65,10 @@ export default function MainPage() {
                 onClose={() => setFiltersOpen(false)}
                 title="Filters">
                 <Filters
-                    selectedMasters={filterMasters}
-                    selectedServices={filterServices}
-                    onChangeMasters={setFilterMasters}
-                    onChangeServices={setFilterServices}
-                    onApply={() => setFiltersOpen(false)}
+                    initialMasters={filterMasters}
+                    initialServices={filterServices}
+                    onApply={applyFilters}
+                    onCancel={() => setFiltersOpen(false)}
                 />
             </Drawer>
         </div>
