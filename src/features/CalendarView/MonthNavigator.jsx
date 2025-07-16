@@ -1,7 +1,7 @@
-import { FiChevronLeft, FiChevronRight, FiSliders } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./MonthNavigator.module.scss";
 
-export default function MonthNavigator({ current, onChange, onFilterClick }) {
+export default function MonthNavigator({ current, onChange }) {
     const prev = () =>
         onChange({
             year: current.month === 0 ? current.year - 1 : current.year,
@@ -23,21 +23,13 @@ export default function MonthNavigator({ current, onChange, onFilterClick }) {
             <div className={styles.title}>{label}</div>
 
             <div className={styles.arrows}>
-                <button
-                    onClick={prev}
-                    className={styles.arrow}
-                    aria-label="Previous month">
+                <button onClick={prev} className={styles.arrow} aria-label="Previous">
                     <FiChevronLeft />
                 </button>
-                <button onClick={next} className={styles.arrow} aria-label="Next month">
+                <button onClick={next} className={styles.arrow} aria-label="Next">
                     <FiChevronRight />
                 </button>
             </div>
-
-            <button onClick={onFilterClick} className={styles.filter}>
-                <FiSliders />
-                <span>Filters</span>
-            </button>
         </div>
     );
 }

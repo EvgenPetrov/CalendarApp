@@ -1,19 +1,23 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useAppointments } from "../../app/api/hooks";
-import Filters from "./Filters";
-import Pagination from "./Pagination";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
+import Pagination from "./Pagination";
 import cn from "classnames";
 import styles from "./ListView.module.scss";
 
-export default function ListView({ onFilterClick }) {
+export default function ListView({ filters }) {
     const [page, setPage] = useState(1);
-    const [dateRange, setDateRange] = useState({ from: null, to: null });
+    const [search, setSearch] = useState("");
+    const [range, setRange] = useState({ from: null, to: null });
+
     const { data, isLoading } = useAppointments({
         page,
         perPage: 10,
-        since: dateRange.from?.toISOString(),
-        until: dateRange.to?.toISOString(),
+        since: range.from?.toISOString(),
+        until: range.to?.toISOString(),
+        search,
+        masterIds: filters.masters,
+        serviceIds: filters.services,
     });
 
     const rows = useMemo(
@@ -33,12 +37,11 @@ export default function ListView({ onFilterClick }) {
             })) || [],
         [data]
     );
-
     const total = data?.total || 0;
 
     return (
         <div className={styles.list}>
-            <Filters onFilterClick={onFilterClick} />
+            <h2 className={styles.title}>Orders</h2>
 
             <div className={styles.tableWrapper}>
                 <div className={styles.tableToolbar}>
@@ -47,9 +50,15 @@ export default function ListView({ onFilterClick }) {
                             type="text"
                             className={styles.searchInput}
                             placeholder="Search"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    <DatePicker initialRange={dateRange} onSelectRange={setDateRange} />
+                    <DatePicker
+                        mode="range"
+                        initialRange={range}
+                        onSelectRange={setRange}
+                    />
                 </div>
 
                 {isLoading ? (

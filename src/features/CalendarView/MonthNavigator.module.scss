@@ -6,11 +6,11 @@
 }
 
 .title {
-    font-family: var(--font-primary);
+    flex: 1;
     text-align: center;
+    font-family: var(--font-primary);
     font-weight: 600;
     font-size: 20px;
-    line-height: 140%;
     color: var(--primary-7);
 }
 
@@ -31,16 +31,15 @@
         height: 24px;
         color: var(--gray-scale-9);
     }
-
     &:hover svg {
         color: var(--primary-5);
     }
 }
 
+/* Стили для Filter‑кнопки можно оставить тут, чтобы MainPage импортировал */
 .filter {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
     padding: 8px 16px 8px 8px;
     width: 101px;
