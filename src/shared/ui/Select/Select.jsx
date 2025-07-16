@@ -1,13 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+// src/shared/ui/Select/Select.jsx
+import React, { useState, useRef, useEffect } from "react";
 import { motion as Motion } from "framer-motion";
+import { FiChevronDown, FiChevronUp, FiX } from "react-icons/fi";
 import styles from "./Select.module.scss";
 
-export function Select({ placeholder, hook, onChange, value }) {
+export function Select({ placeholder, hook, value, onChange }) {
     const [query, setQuery] = useState("");
     const [open, setOpen] = useState(false);
     const containerRef = useRef();
     const listRef = useRef();
 
+    // подгрузка страниц
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = hook({
         search: query,
     });
@@ -18,30 +21,44 @@ export function Select({ placeholder, hook, onChange, value }) {
         const el = listRef.current;
         if (!el) return;
         const onScroll = () => {
-            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10 && hasNextPage)
+            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10 && hasNextPage) {
                 fetchNextPage();
+            }
         };
         el.addEventListener("scroll", onScroll);
         return () => el.removeEventListener("scroll", onScroll);
     }, [hasNextPage, fetchNextPage]);
 
-    // click outside closes
+    // click outside
     useEffect(() => {
         const handler = (e) => {
-            if (open && containerRef.current && !containerRef.current.contains(e.target))
+            if (
+                open &&
+                containerRef.current &&
+                !containerRef.current.contains(e.target)
+            ) {
                 setOpen(false);
+            }
         };
         document.addEventListener("mousedown", handler);
         return () => document.removeEventListener("mousedown", handler);
     }, [open]);
 
-    // display logic
+    // что показывать в поле: либо ввод пользователя, либо имя value
     const display = open ? query : value?.name || "";
+
+    const toggleOpen = () => setOpen((o) => !o);
+    const clearQuery = () => {
+        setQuery("");
+        // если чистим уже выбранное value, сбросим value
+        onChange(null);
+        setOpen(true);
+    };
 
     return (
         <div className={styles.select} ref={containerRef}>
             <input
-                className={styles.select__input}
+                className={styles.input}
                 placeholder={placeholder}
                 value={display}
                 onChange={(e) => {
@@ -50,9 +67,15 @@ export function Select({ placeholder, hook, onChange, value }) {
                 }}
                 onFocus={() => setOpen(true)}
             />
+            {display && (
+                <FiX className={`${styles.icon} ${styles.clear}`} onClick={clearQuery} />
+            )}
+            <div className={styles.icon} onClick={toggleOpen}>
+                {open ? <FiChevronUp /> : <FiChevronDown />}
+            </div>
             {open && (
                 <Motion.ul
-                    className={styles.select__list}
+                    className={styles.list}
                     ref={listRef}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -60,7 +83,7 @@ export function Select({ placeholder, hook, onChange, value }) {
                     {items.map((item) => (
                         <li
                             key={item.id}
-                            className={styles.select__item}
+                            className={styles.item}
                             onClick={() => {
                                 onChange(item);
                                 setOpen(false);
@@ -70,7 +93,7 @@ export function Select({ placeholder, hook, onChange, value }) {
                         </li>
                     ))}
                     {isFetchingNextPage && (
-                        <li className={styles.select__loading}>Загрузка...</li>
+                        <li className={styles.loading}>Загрузка...</li>
                     )}
                 </Motion.ul>
             )}

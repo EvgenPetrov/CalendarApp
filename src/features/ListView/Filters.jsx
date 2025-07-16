@@ -1,3 +1,4 @@
+// src/features/ListView/Filters.jsx
 import React, { useState, useEffect } from "react";
 import { FiRotateCw, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useInfiniteMasters, useInfiniteServices } from "../../app/api/hooks";
@@ -5,7 +6,7 @@ import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
 import styles from "./Filters.module.scss";
 
-export default function Filters({ initialMasters, initialServices, onApply, onCancel }) {
+export default function Filters({ initialMasters, initialServices, onApply }) {
     const [localMasters, setLocalMasters] = useState(initialMasters);
     const [localServices, setLocalServices] = useState(initialServices);
 
@@ -14,11 +15,13 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
     const [servicesExpanded, setServicesExpanded] = useState(false);
     const [searchServices, setSearchServices] = useState("");
 
+    // ресет внутренних выборов, когда внешние props меняются
     useEffect(() => {
         setLocalMasters(initialMasters);
         setLocalServices(initialServices);
     }, [initialMasters, initialServices]);
 
+    // infinite hooks
     const {
         data: mastersPages,
         fetchNextPage: fetchMoreMasters,
@@ -51,17 +54,18 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
 
     return (
         <div className={styles.root}>
-            <div className={styles.resetAll}>
-                <button onClick={resetAll}>
+            {/* Сбрасываем все — перенесли наверх */}
+            <div className={styles.header}>
+                <button onClick={resetAll} className={styles.resetAll}>
                     <FiRotateCw /> Reset all
                 </button>
             </div>
 
             {/* Masters */}
             <div className={styles.section}>
-                <div className={styles.header}>
+                <div className={styles.sectionHeader}>
                     <span>Masters</span>
-                    <div className={styles.controls}>
+                    <div>
                         {localMasters.length > 0 && (
                             <button
                                 onClick={() => setLocalMasters([])}
@@ -84,7 +88,7 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
                             value={searchMasters}
                             onChange={setSearchMasters}
                         />
-                        <div className={styles.list}>
+                        <div className={styles.listGrid}>
                             {masters.map((m) => (
                                 <label key={m.id} className={styles.item}>
                                     <input
@@ -109,9 +113,9 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
 
             {/* Services */}
             <div className={styles.section}>
-                <div className={styles.header}>
+                <div className={styles.sectionHeader}>
                     <span>Services</span>
-                    <div className={styles.controls}>
+                    <div>
                         {localServices.length > 0 && (
                             <button
                                 onClick={() => setLocalServices([])}
@@ -134,7 +138,7 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
                             value={searchServices}
                             onChange={setSearchServices}
                         />
-                        <div className={styles.list}>
+                        <div className={styles.listGrid}>
                             {services.map((s) => (
                                 <label key={s.id} className={styles.item}>
                                     <input
@@ -157,15 +161,13 @@ export default function Filters({ initialMasters, initialServices, onApply, onCa
                 )}
             </div>
 
-            {/* Apply / Cancel */}
+            {/* Только Show results на всю ширину */}
             <div className={styles.footer}>
                 <Button
                     variant="primary"
-                    onClick={() => onApply(localMasters, localServices)}>
+                    onClick={() => onApply(localMasters, localServices)}
+                    fullWidth>
                     Show results
-                </Button>
-                <Button variant="ghost" onClick={onCancel}>
-                    Cancel
                 </Button>
             </div>
         </div>

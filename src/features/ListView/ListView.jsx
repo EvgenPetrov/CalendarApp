@@ -4,18 +4,16 @@ import { useAppointments } from "../../app/api/hooks";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import Pagination from "./Pagination";
 import ViewHeader from "../../shared/ui/ViewHeader/ViewHeader";
+import { FiSearch, FiX } from "react-icons/fi";
 import cn from "classnames";
 import styles from "./ListView.module.scss";
-
-// иконки
-import { FiSearch, FiX } from "react-icons/fi";
 
 export default function ListView({ filters, onFilterClick }) {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [range, setRange] = useState({ from: null, to: null });
 
-    // считаем since/until
+    // --- строим since/until для API ---
     let since, until;
     if (range.from) {
         const f = new Date(range.from);
@@ -26,7 +24,7 @@ export default function ListView({ filters, onFilterClick }) {
         until = t.toISOString();
     }
 
-    // fetch без search — будем фильтровать локально
+    // загружаем сырые апойнтменты (без локального поиска)
     const { data, isLoading } = useAppointments({
         page,
         perPage: 10,
@@ -35,7 +33,7 @@ export default function ListView({ filters, onFilterClick }) {
         ...(since ? { since, until } : {}),
     });
 
-    // готовим строки
+    // мапим данные в удобный массив
     const rows = useMemo(
         () =>
             (data?.data || []).map((a) => ({
@@ -48,21 +46,22 @@ export default function ListView({ filters, onFilterClick }) {
                     minute: "2-digit",
                 }),
                 service: a.service.name,
-                master: a.master.name,
+                masterName: a.master.name,
+                masterAvatar: a.master.avatarUrl,
                 status: a.status,
             })),
         [data]
     );
 
-    // фильтруем по name/service/master
+    // локально фильтруем по name, service и masterName
     const filteredRows = useMemo(() => {
-        if (!search.trim()) return rows;
-        const q = search.toLowerCase();
+        const q = search.trim().toLowerCase();
+        if (!q) return rows;
         return rows.filter(
-            ({ name, service, master }) =>
+            ({ name, service, masterName }) =>
                 name.toLowerCase().includes(q) ||
                 service.toLowerCase().includes(q) ||
-                master.toLowerCase().includes(q)
+                masterName.toLowerCase().includes(q)
         );
     }, [rows, search]);
 
@@ -132,7 +131,16 @@ export default function ListView({ filters, onFilterClick }) {
                                             {r.service}
                                         </span>
                                     </td>
-                                    <td>{r.master}</td>
+                                    <td>
+                                        <div className={styles.masterCell}>
+                                            <img
+                                                src={r.masterAvatar}
+                                                alt={r.masterName}
+                                                className={styles.avatar}
+                                            />
+                                            <span>{r.masterName}</span>
+                                        </div>
+                                    </td>
                                     <td>
                                         <span
                                             className={cn(

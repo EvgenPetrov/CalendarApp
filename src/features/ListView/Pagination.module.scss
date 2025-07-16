@@ -1,0 +1,83 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; // выравниваем в правый угол
+    gap: 8px;
+    padding: 12px 16px; // отступы по макету
+    background: var(--gray-scale-1);
+    border-top: 1px solid var(--gray-scale-3);
+}
+
+/* Кнопки «Prev»/«Next» со стрелками */
+.button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--gray-scale-5);
+    border-radius: 50%; // делаем круглые
+    background: var(--gray-scale-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s;
+
+    &:hover:not(:disabled) {
+        border-color: var(--primary-3); // hover-эффект
+    }
+
+    &:disabled {
+        border-color: var(--gray-scale-3);
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+/* Текстовый блок «Page» и «of N» */
+.info {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--gray-scale-6);
+
+    /* небольшой отступ между «Page» и селектом */
+    .label {
+        margin-right: 4px;
+    }
+}
+
+/* Селект номера страницы */
+.select {
+    position: relative;
+    width: 70px;
+    height: 38px;
+    padding: 0 32px 0 8px; // оставляем место для стрелки справа
+    background: var(--gray-scale-1);
+    border: 1px solid var(--gray-scale-5);
+    border-radius: 4px;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    color: var(--gray-scale-8);
+    appearance: none;
+    transition: border-color 0.2s;
+
+    &:hover {
+        border-color: var(--primary-3);
+    }
+
+    /* псевдо-стрелка */
+    &::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        width: 8px;
+        height: 8px;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M2 3L4 5L6 3' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: contain;
+        transform: translateY(-50%);
+    }
+}

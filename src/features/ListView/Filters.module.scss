@@ -1,42 +1,39 @@
+/* src/features/ListView/Filters.module.scss */
+
 .root {
     display: flex;
     flex-direction: column;
-}
-
-.resetAll {
-    padding: 0 32px;
-    border-bottom: 1px solid var(--gray-scale-3);
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 16px;
-
-    button {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        background: none;
-        border: none;
-        color: var(--primary-7);
-        font-family: var(--font-primary);
-        cursor: pointer;
-    }
-}
-
-.section {
-    padding: 0 32px;
-    margin-bottom: 24px;
+    height: 100%;
 }
 
 .header {
     display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+    /* тут будет кнопка Reset all рядом с крестиком Drawer-а */
+}
+
+.resetAll {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--primary-7);
+    font-family: var(--font-primary);
+    cursor: pointer;
+}
+
+.section {
+    padding: 0 24px;
+    margin-bottom: 24px;
+}
+
+.sectionHeader {
+    display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-}
-
-.controls {
-    display: flex;
-    gap: 8px;
 }
 
 .resetBtn,
@@ -46,13 +43,17 @@
     padding: 4px;
     cursor: pointer;
     color: var(--primary-7);
+    margin-left: 8px;
 }
 
 .search {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
-.list {
+.listGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
     max-height: 200px;
     overflow-y: auto;
     padding-right: 8px;
@@ -62,15 +63,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
     font-size: 14px;
     color: var(--gray-scale-8);
 }
 
 .loadMore {
-    width: 100%;
+    grid-column: 1 / -1;
     text-align: center;
-    padding: 8px 0;
+    padding: 8px;
     background: var(--gray-scale-1);
     border: 1px solid var(--gray-scale-3);
     border-radius: 4px;
@@ -79,5 +79,10 @@
 }
 
 .footer {
-    padding: 0 32px 32px;
+    margin-top: auto;
+    padding: 0 24px 24px;
+}
+
+.footer :global(button) {
+    width: 100%;
 }
