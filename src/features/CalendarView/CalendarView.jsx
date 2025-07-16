@@ -19,15 +19,18 @@ export default function CalendarView({ onDayClick, onFilterClick }) {
         perPage: 100,
     });
 
+    // Группируем фактические апойнтменты по дню
     const eventsByDay = useMemo(() => {
-        const map = {};
+        const m = {};
         apptsData.data.forEach((a) => {
             const d = new Date(a.at).getDate();
-            map[d] = (map[d] || 0) + 1;
+            if (!m[d]) m[d] = [];
+            m[d].push(a);
         });
-        return map;
+        return m;
     }, [apptsData]);
 
+    //  35 ячеек, передаём в них ивенты массива
     const cells = useMemo(() => {
         const firstWeekday = new Date(current.year, current.month, 1).getDay(); // 0=Sun
         const daysInMonth = new Date(current.year, current.month + 1, 0).getDate();
@@ -49,8 +52,8 @@ export default function CalendarView({ onDayClick, onFilterClick }) {
             }
             const day = date.getDate();
             const status = disabled ? "closed" : statuses[day - 1] || "working";
-            const eventsCount = disabled ? 0 : eventsByDay[day] || 0;
-            return { date, day, status, eventsCount, disabled };
+            const events = eventsByDay[day] || [];
+            return { date, day, status, events, disabled };
         });
     }, [current, statuses, eventsByDay]);
 
@@ -80,13 +83,14 @@ export default function CalendarView({ onDayClick, onFilterClick }) {
                 </div>
 
                 <div className={styles.grid}>
-                    {cells.map(({ date, day, status, eventsCount, disabled }, i) => (
+                    {cells.map(({ date, day, status, events, disabled }, i) => (
                         <DayCell
                             key={i}
+                            date={date}
                             day={day}
                             status={status}
                             today={today}
-                            eventsCount={eventsCount}
+                            events={events}
                             disabled={disabled}
                             onClick={() => !disabled && onDayClick(date)}
                         />

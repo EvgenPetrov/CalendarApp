@@ -1,7 +1,15 @@
 .page {
-    max-width: 1400px;
+    width: 100%;
+    background: var(--gray-scale-2);
+    padding: 20px 0;
+}
+
+.content {
+    /* 7 колонок по 174px + 6*8px gutter + 2px border = 1220px */
+    width: calc(7 * 174px + 6 * 8px + 2px);
     margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {

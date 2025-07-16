@@ -1,62 +1,63 @@
-import React, { useState } from "react";
-import ViewToggle from "../../shared/ui/ViewToggle/ViewToggle";
+import { useState } from "react";
 import CalendarView from "../../features/CalendarView/CalendarView";
 import ListView from "../../features/ListView/ListView";
 import AddEventModal from "../../features/AddEventModal/AddEventModal";
-import { Button } from "../../shared/ui/Button/Button";
-import { Modal } from "../../shared/ui/Modal/Modal";
 import Filters from "../../features/ListView/Filters";
-import styles from "./MainPage.module.scss";
+import { Drawer } from "../../shared/ui/Drawer/Drawer";
+import { Button } from "../../shared/ui/Button/Button";
 import { FiPlus } from "react-icons/fi";
+import styles from "./MainPage.module.scss";
+import ViewToggle from "../../shared/ui/ViewToggle/ViewToggle";
 
 export default function MainPage() {
     const [view, setView] = useState("calendar");
-    const [modalOpen, setModalOpen] = useState(false);
-    const [initialDate, setInitialDate] = useState(null);
+    const [eventOpen, setEventOpen] = useState(false);
     const [filtersOpen, setFiltersOpen] = useState(false);
+    const [initialDate, setInitialDate] = useState(null);
+
+    const openNewEvent = (date = null) => {
+        setInitialDate(date);
+        setEventOpen(true);
+    };
 
     return (
         <div className={styles.page}>
-            <header className={styles.header}>
-                <ViewToggle view={view} onChange={setView} />
-                <Button
-                    variant="primary"
-                    onClick={() => {
-                        setInitialDate(null);
-                        setModalOpen(true);
-                    }}>
-                    <FiPlus />
-                    <span>Add event</span>
-                </Button>
-            </header>
+            <div className={styles.content}>
+                <header className={styles.header}>
+                    <ViewToggle view={view} onChange={setView} />
+                    <Button variant="primary" onClick={() => openNewEvent()}>
+                        <FiPlus />
+                        <span>Add event</span>
+                    </Button>
+                </header>
 
-            {view === "calendar" ? (
-                <CalendarView
-                    onDayClick={(date) => {
-                        setInitialDate(date);
-                        setModalOpen(true);
-                    }}
-                    onFilterClick={() => setFiltersOpen(true)}
-                />
-            ) : (
-                <ListView />
-            )}
+                {view === "calendar" ? (
+                    <CalendarView
+                        onDayClick={openNewEvent}
+                        onFilterClick={() => setFiltersOpen(true)}
+                    />
+                ) : (
+                    <ListView onFilterClick={() => setFiltersOpen(true)} />
+                )}
+            </div>
 
             <AddEventModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
+                isOpen={eventOpen}
+                onClose={() => setEventOpen(false)}
                 initialDate={initialDate}
             />
 
-            <Modal isOpen={filtersOpen} onClose={() => setFiltersOpen(false)}>
+            <Drawer
+                isOpen={filtersOpen}
+                onClose={() => setFiltersOpen(false)}
+                title="Filters">
                 <Filters
-                    onChange={(f) => {
-                        console.log("Новые фильтры:", f);
+                    onChange={() => {
+                        // TODO: apply filters
                         setFiltersOpen(false);
-                        // TODO: применить фильтры
                     }}
                 />
-            </Modal>
+            </Drawer>
         </div>
     );
 }

@@ -1,23 +1,19 @@
 .list {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-/* ======= заголовок над «доской» ======= */
+/* Заголовок «Orders + Filters» */
 .filtersHeader {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 16px;
+    margin: 0 0 16px 0;
+    align-self: flex-start; /* прижать влево */
 }
-.title {
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 111%;
-    color: var(--gray-scale-8);
-    margin: 0;
-}
+
+/* Кнопка фильтров рядом с заголовком */
 .filterBtn {
     display: flex;
     align-items: center;
@@ -33,38 +29,40 @@
     line-height: 20px;
     cursor: pointer;
     transition: background 0.2s;
-}
-.filterBtn:hover {
-    background: var(--gray-scale-2);
-}
-.filterBtn svg {
-    width: 16px;
-    height: 16px;
+
+    &:hover {
+        background: var(--gray-scale-2);
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
 }
 
-/* ======= обёртка («доска») для поиска+таблицы ======= */
+/* Обёртка самой таблицы */
 .tableWrapper {
+    width: 100%;
     background: var(--gray-scale-1);
     border: 1px solid var(--gray-scale-3);
     border-radius: 8px;
-    // padding: 16px 24px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    overflow: visible;
 }
 
-/* ======= панель поиска ======= */
 .tableToolbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 8px;
     padding: 8px;
 }
+
 .searchWrapper {
     display: flex;
     align-items: center;
     gap: 4px;
 }
+
 .searchInput {
     width: 300px;
     height: 38px;
@@ -75,10 +73,13 @@
     font-family: var(--font-primary);
     font-size: 14px;
     color: var(--gray-scale-9);
+
+    &::placeholder {
+        color: var(--gray-scale-6);
+    }
 }
-.searchInput::placeholder {
-    color: var(--gray-scale-6);
-}
+
+/* Кнопка-иконка открытия calendar */
 .calendarBtn {
     display: flex;
     align-items: center;
@@ -90,48 +91,97 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.2s;
-}
-.calendarBtn:hover {
-    background: var(--gray-scale-2);
-}
-.calendarBtn svg {
-    width: 20px;
-    height: 20px;
-    color: var(--gray-scale-8);
+
+    &:hover {
+        background: var(--gray-scale-2);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        color: var(--gray-scale-8);
+    }
 }
 
-/* ======= таблица ======= */
+/* Таблица */
 .table {
     width: 100%;
     border-collapse: collapse;
-}
-.table th,
-.table td {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--gray-scale-3);
-    text-align: left;
-}
-.table th {
-    font-family: var(--font-primary);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 129%;
-    color: var(--gray-scale-7);
+
+    th,
+    td {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--gray-scale-3);
+        text-align: left;
+    }
+    th {
+        background: var(--gray-scale-2);
+        font-family: var(--font-primary);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 129%;
+        color: var(--gray-scale-7);
+    }
+    td {
+        font-family: var(--font-primary);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 129%;
+        color: var(--gray-scale-8);
+    }
 }
 
-.table td {
-    font-family: var(--font-primary);
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 129%;
-    color: var(--gray-scale-8);
-}
-
-/* ======= пагинация ======= */
+/* Пагинация */
 .pagination {
     display: flex;
     gap: 8px;
-    padding: 8px;
+    padding: 8px 24px;
     justify-content: flex-end;
     align-items: center;
+}
+
+/* Service pill */
+.service {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    height: 28px;
+    border-radius: 4px;
+    background: var(--primary-1);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 143%;
+    color: var(--primary-6);
+}
+
+/* Status pills */
+.statusPill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    height: 28px;
+    border-radius: 4px;
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 143%;
+
+    &--new {
+        background: var(--green-1);
+        color: var(--green-7);
+    }
+    &--confirmed {
+        background: var(--gray-scale-2);
+        color: var(--gray-scale-7);
+    }
+    &--paid {
+        background: var(--orange-1);
+        color: var(--orange-7);
+    }
+    &--cancelled {
+        background: var(--red-1);
+        color: var(--red-7);
+    }
 }

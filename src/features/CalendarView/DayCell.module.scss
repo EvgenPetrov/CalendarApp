@@ -1,12 +1,13 @@
-/* DayCell.module.scss */
-
 .cell {
+    /* теперь бордер, размер и box-sizing работают чётко */
+    box-sizing: border-box;
+    width: 174px;
+    height: 120px;
     position: relative;
-    padding: 8px;
-    min-height: 120px;
-    border: 1px solid var(--gray-scale-4);
     display: flex;
     flex-direction: column;
+    padding: 8px;
+    border: 1px solid var(--gray-scale-4);
     user-select: none;
     background-color: var(--gray-scale-1);
 
@@ -29,10 +30,9 @@
         pointer-events: none;
     }
 
-    /* рамка для «сегодня» */
     &.cell--today {
         border: 2px solid var(--primary-4);
-        overflow: visible; /* флаг выходит за пределы */
+        overflow: visible;
     }
 }
 
@@ -108,18 +108,79 @@
     color: var(--gray-scale-9);
 }
 
-/* круглый бейдж с числом событий */
-.badge {
-    margin-top: auto;
-    background: var(--primary-4);
-    color: #fff;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+/* DayCell.module.scss */
+
+/* … ваши старые стили оставляем без изменений … */
+
+.events {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: calc(2 * 24px + 4px);
+    overflow: hidden;
+}
+
+/* Сохраняем вертикальный стек */
+.eventsRow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Одна карточка события */
+.eventRow {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-family: var(--font-primary);
+    gap: 6px;
+    padding: 4px 6px;
+    height: 24px;
+    border-left: 2px solid;
+    border-radius: 2px;
     font-size: 13px;
-    line-height: 16px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Время */
+.eventTime {
+    font-weight: 500;
+    color: var(--gray-scale-7);
+}
+
+/* Имя */
+.eventName {
+    font-weight: 500;
+    color: var(--gray-scale-9);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* + N More */
+.more {
+    padding: 4px 6px;
+    height: 24px;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--primary-7);
+}
+
+/* Цвета по статусу */
+.event--new {
+    background: var(--green-1);
+    border-color: var(--green-6);
+}
+.event--confirmed {
+    background: var(--gray-scale-2);
+    border-color: var(--gray-scale-8);
+}
+.event--paid {
+    background: var(--orange-1);
+    border-color: var(--orange-6);
+}
+.event--cancelled {
+    background: var(--red-1);
+    border-color: var(--red-7);
 }

@@ -1,12 +1,20 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useAppointments } from "../../app/api/hooks";
 import Filters from "./Filters";
 import Pagination from "./Pagination";
+import DatePicker from "../../shared/ui/DatePicker/DatePicker";
+import cn from "classnames";
 import styles from "./ListView.module.scss";
 
 export default function ListView({ onFilterClick }) {
     const [page, setPage] = useState(1);
-    const { data, isLoading } = useAppointments({ page, perPage: 10 });
+    const [dateRange, setDateRange] = useState({ from: null, to: null });
+    const { data, isLoading } = useAppointments({
+        page,
+        perPage: 10,
+        since: dateRange.from?.toISOString(),
+        until: dateRange.to?.toISOString(),
+    });
 
     const rows = useMemo(
         () =>
@@ -34,30 +42,14 @@ export default function ListView({ onFilterClick }) {
 
             <div className={styles.tableWrapper}>
                 <div className={styles.tableToolbar}>
-                    <div /> {/* пустой, чтобы правый блок встал по правому краю */}
                     <div className={styles.searchWrapper}>
                         <input
                             type="text"
                             className={styles.searchInput}
                             placeholder="Search"
                         />
-                        <button className={styles.calendarBtn}>
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                        </button>
                     </div>
+                    <DatePicker initialRange={dateRange} onSelectRange={setDateRange} />
                 </div>
 
                 {isLoading ? (
@@ -78,14 +70,28 @@ export default function ListView({ onFilterClick }) {
                                 <tr key={r.id}>
                                     <td>{r.name}</td>
                                     <td>{r.datetime}</td>
-                                    <td>{r.service}</td>
+                                    <td>
+                                        <span className={styles.service}>
+                                            {r.service}
+                                        </span>
+                                    </td>
                                     <td>{r.master}</td>
-                                    <td>{r.status}</td>
+                                    <td>
+                                        <span
+                                            className={cn(
+                                                styles.statusPill,
+                                                styles[`statusPill--${r.status}`]
+                                            )}>
+                                            {r.status.charAt(0).toUpperCase() +
+                                                r.status.slice(1)}
+                                        </span>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 )}
+
                 <Pagination total={total} page={page} onPageChange={setPage} />
             </div>
         </div>

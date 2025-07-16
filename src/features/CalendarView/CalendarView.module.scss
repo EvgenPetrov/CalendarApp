@@ -4,6 +4,8 @@
 }
 
 .board {
+    display: inline-block;
+    margin: 0 auto;
     background: var(--gray-scale-1);
     border: 1px solid var(--gray-scale-3);
     border-radius: 8px;
@@ -13,11 +15,12 @@
 
 .weekdays {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 174px);
     margin-bottom: 8px;
 }
 
 .weekday {
+    width: 174px;
     padding: 8px;
     font-family: var(--font-primary);
     font-weight: 600;
@@ -33,5 +36,7 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 174px);
+    grid-auto-rows: 120px;
+    gap: 0;
 }

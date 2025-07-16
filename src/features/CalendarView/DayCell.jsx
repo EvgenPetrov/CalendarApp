@@ -1,10 +1,29 @@
-import React from "react";
 import cn from "classnames";
 import styles from "./DayCell.module.scss";
 
-export default function DayCell({ day, status, today, eventsCount, onClick, disabled }) {
-    const cellDate = new Date(today.getFullYear(), today.getMonth(), day);
-    const isToday = cellDate.toDateString() === today.toDateString();
+export default function DayCell({
+    date,
+    day,
+    status,
+    today,
+    events = [],
+    onClick,
+    disabled,
+}) {
+    const isToday = date.toDateString() === today.toDateString();
+
+    const fmtTime = (iso) =>
+        new Date(iso).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+    const renderEvent = (e, idx) => (
+        <div key={idx} className={cn(styles.eventRow, styles[`event--${e.status}`])}>
+            <span className={styles.eventTime}>{fmtTime(e.at)}</span>
+            <span className={styles.eventName}>{e.customerName}</span>
+        </div>
+    );
 
     return (
         <div
@@ -14,26 +33,43 @@ export default function DayCell({ day, status, today, eventsCount, onClick, disa
                 { [styles["cell--today"]]: isToday },
                 { [styles["cell--other"]]: disabled }
             )}
-            onClick={!disabled ? () => onClick(cellDate) : undefined}>
-            {/* Today-маркер */}
+            onClick={!disabled ? () => onClick(date) : undefined}>
             {isToday && (
                 <div className={styles.todayMark}>
-                    {/* цифра внутри цветного флага */}
                     <span className={styles.todayFlag}>{day}</span>
-                    {/* надпись справа от флага */}
                     <span className={styles.todayLabel}>Today</span>
                 </div>
             )}
 
-            {/* обычный номер дня (скроется при isToday) */}
             <div className={cn(styles.day, { [styles.hidden]: isToday })}>{day}</div>
 
-            {status === "closed" && !disabled && (
-                <div className={styles.status}>Closed</div>
-            )}
-            {status === "blocked" && <div className={styles.status}>Blocked</div>}
+            {events.length > 0 && (
+                <div className={styles.events}>
+                    <div className={styles.eventsRow}>
+                        {events.length <= 2
+                            ? events.map(renderEvent)
+                            : renderEvent(events[0], 0)}
+                    </div>
 
-            {eventsCount > 0 && <div className={styles.badge}>{eventsCount}</div>}
+                    {events.length > 1 && (
+                        <div className={styles.eventsRow}>
+                            {events.length === 2 ? (
+                                renderEvent(events[1], 1)
+                            ) : (
+                                <div className={styles.more}>
+                                    + {events.length - 1} More
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {(status === "closed" || status === "blocked") && (
+                <div className={styles.status}>
+                    {status === "closed" ? "Closed" : "Blocked"}
+                </div>
+            )}
         </div>
     );
 }
