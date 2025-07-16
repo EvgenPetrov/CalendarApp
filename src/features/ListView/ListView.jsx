@@ -1,3 +1,4 @@
+// src/features/ListView/ListView.jsx
 import React, { useMemo, useState } from "react";
 import { useAppointments } from "../../app/api/hooks";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
@@ -6,21 +7,35 @@ import ViewHeader from "../../shared/ui/ViewHeader/ViewHeader";
 import cn from "classnames";
 import styles from "./ListView.module.scss";
 
+// иконки
+import { FiSearch, FiX } from "react-icons/fi";
+
 export default function ListView({ filters, onFilterClick }) {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [range, setRange] = useState({ from: null, to: null });
 
+    // считаем since/until
+    let since, until;
+    if (range.from) {
+        const f = new Date(range.from);
+        f.setHours(0, 0, 0, 0);
+        const t = new Date(range.to || range.from);
+        t.setHours(23, 59, 59, 999);
+        since = f.toISOString();
+        until = t.toISOString();
+    }
+
+    // fetch без search — будем фильтровать локально
     const { data, isLoading } = useAppointments({
         page,
         perPage: 10,
-        since: range.from?.toISOString(),
-        until: range.to?.toISOString(),
-        search,
         masterIds: filters.masters,
         serviceIds: filters.services,
+        ...(since ? { since, until } : {}),
     });
 
+    // готовим строки
     const rows = useMemo(
         () =>
             (data?.data || []).map((a) => ({
@@ -39,6 +54,18 @@ export default function ListView({ filters, onFilterClick }) {
         [data]
     );
 
+    // фильтруем по name/service/master
+    const filteredRows = useMemo(() => {
+        if (!search.trim()) return rows;
+        const q = search.toLowerCase();
+        return rows.filter(
+            ({ name, service, master }) =>
+                name.toLowerCase().includes(q) ||
+                service.toLowerCase().includes(q) ||
+                master.toLowerCase().includes(q)
+        );
+    }, [rows, search]);
+
     const total = data?.total || 0;
 
     return (
@@ -48,18 +75,37 @@ export default function ListView({ filters, onFilterClick }) {
             <div className={styles.tableWrapper}>
                 <div className={styles.tableToolbar}>
                     <div className={styles.searchWrapper}>
-                        <input
-                            type="text"
-                            className={styles.searchInput}
-                            placeholder="Search"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                        <div className={styles.searchInputWrapper}>
+                            <input
+                                type="text"
+                                className={styles.searchInput}
+                                placeholder="Search"
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setPage(1);
+                                }}
+                            />
+                            {search && (
+                                <FiX
+                                    className={styles.clearIcon}
+                                    onClick={() => {
+                                        setSearch("");
+                                        setPage(1);
+                                    }}
+                                />
+                            )}
+                            <FiSearch className={styles.searchIcon} />
+                        </div>
                     </div>
+
                     <DatePicker
                         mode="range"
                         initialRange={range}
-                        onSelectRange={setRange}
+                        onSelectRange={(r) => {
+                            setRange(r);
+                            setPage(1);
+                        }}
                     />
                 </div>
 
@@ -77,7 +123,7 @@ export default function ListView({ filters, onFilterClick }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map((r) => (
+                            {filteredRows.map((r) => (
                                 <tr key={r.id}>
                                     <td>{r.name}</td>
                                     <td>{r.datetime}</td>

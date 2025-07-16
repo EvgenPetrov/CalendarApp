@@ -18,9 +18,11 @@ export default function MainPage() {
     const [filterMasters, setFilterMasters] = useState([]);
     const [filterServices, setFilterServices] = useState([]);
 
-    // Открываем форму и префиллим дату
-    const openNewEvent = (date = null) => {
-        setInitialDate(date || new Date());
+    // При клике по дню приходит Date → используем его,
+    // при клике по кнопке — undefined → ставим today.
+    const openNewEvent = (clickedDate) => {
+        const dateToUse = clickedDate instanceof Date ? clickedDate : new Date();
+        setInitialDate(dateToUse);
         setEventOpen(true);
     };
 
@@ -54,7 +56,13 @@ export default function MainPage() {
                 )}
             </div>
 
+            {/*
+              Чтобы useForm.defaultValues в AddEventModal
+              всегда брали «свежую» initialDate на первый рендер,
+              даём самому React «ключ», привязанный к дате.
+            */}
             <AddEventModal
+                key={initialDate ? initialDate.toISOString() : "today"}
                 isOpen={eventOpen}
                 onClose={() => setEventOpen(false)}
                 initialDate={initialDate}

@@ -22,25 +22,20 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
         serviceIds: filters.services,
     });
 
-    // сгруппировать по дню
     const eventsByDay = useMemo(() => {
-        const map = {};
+        const m = {};
         apptsRes.data.forEach((a) => {
             const d = new Date(a.at).getUTCDate();
-            map[d] = map[d] || [];
-            map[d].push(a);
+            (m[d] ||= []).push(a);
         });
-        return map;
+        return m;
     }, [apptsRes]);
 
-    // собрать все ячейки месяца
     const cells = useMemo(() => {
         const firstDow = new Date(cal.year, cal.month, 1).getDay();
         const daysIn = new Date(cal.year, cal.month + 1, 0).getDate();
         const daysPrev = new Date(cal.year, cal.month, 0).getDate();
-        const total = 35;
-
-        return Array.from({ length: total }, (_, i) => {
+        return Array.from({ length: 35 }, (_, i) => {
             const offset = i - firstDow + 1;
             let date, disabled;
             if (offset <= 0) {
@@ -53,7 +48,6 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
                 date = new Date(cal.year, cal.month, offset);
                 disabled = false;
             }
-
             const day = date.getDate();
             const status = disabled ? "closed" : statuses[day - 1] || "working";
             const events = eventsByDay[day] || [];
@@ -69,7 +63,15 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
             />
             <div className={styles.board}>
                 <div className={styles.weekdays}>
-                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((w, i) => (
+                    {[
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                    ].map((w, i) => (
                         <div
                             key={i}
                             className={`${styles.weekday} ${

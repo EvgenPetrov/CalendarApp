@@ -1,4 +1,3 @@
-// AddEventModal.jsx
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
@@ -23,7 +22,9 @@ function formatLocalDate(date) {
 
 export default function AddEventModal({ isOpen, onClose, initialDate }) {
     const qc = useQueryClient();
-    const defaultAt = initialDate ? formatLocalDate(initialDate) : "";
+
+    // defaultAt пересчитывается на каждый монт/рендер
+    const defaultAt = formatLocalDate(initialDate || new Date());
 
     const {
         register,
@@ -46,22 +47,21 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
     const create = useMutation({
         mutationFn: (data) => api.post("/appointments", data).then((r) => r.data.data),
         onSuccess: () => {
-            qc.invalidateQueries({ queryKey: ["appointments"] });
-            qc.invalidateQueries({ queryKey: ["dayStatuses"] });
+            qc.invalidateQueries(["appointments"]);
+            qc.invalidateQueries(["dayStatuses"]);
             onClose();
         },
     });
 
     const onSubmit = (vals) => {
         const [y, m, d] = vals.at.split("-").map(Number);
-        const [h, min] = vals.time.split(":").map(Number);
-        const dt = new Date(y, m - 1, d, h, min);
-
+        const [h, mi] = vals.time.split(":").map(Number);
+        const atIso = new Date(y, m - 1, d, h, mi).toISOString();
         create.mutate({
             customerName: vals.customerName,
             serviceId: vals.service.id,
             masterId: vals.master.id,
-            at: dt.toISOString(),
+            at: atIso,
             status: vals.status,
             notes: vals.notes || null,
         });
@@ -70,13 +70,13 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
     return (
         <Drawer isOpen={isOpen} onClose={onClose} title="New event">
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-                {/* 1-й ряд */}
+                {/* 1. Customer + Service */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
                         <FiUser />
                     </div>
                     <div className={styles.field}>
-                        <label className={styles.label}>Customer</label>
+                        <label>Customer</label>
                         <Input
                             {...register("customerName", { required: true })}
                             placeholder="Full name"
@@ -84,7 +84,7 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                         />
                     </div>
                     <div className={styles.field}>
-                        <label className={styles.label}>Service</label>
+                        <label>Service</label>
                         <Controller
                             name="service"
                             control={control}
@@ -101,13 +101,13 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                     </div>
                 </div>
 
-                {/* 2-й ряд */}
+                {/* 2. Date + Time */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
                         <FiCalendar />
                     </div>
                     <div className={styles.field}>
-                        <label className={styles.label}>Date</label>
+                        <label>Date</label>
                         <Controller
                             name="at"
                             control={control}
@@ -116,8 +116,8 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                                 <DatePicker
                                     mode="single"
                                     initialRange={{
-                                        from: field.value ? new Date(field.value) : null,
-                                        to: field.value ? new Date(field.value) : null,
+                                        from: new Date(field.value),
+                                        to: new Date(field.value),
                                     }}
                                     onSelectRange={({ from }) =>
                                         field.onChange(formatLocalDate(from))
@@ -126,10 +126,9 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                                         <Input
                                             value={value}
                                             readOnly
-                                            error={error}
-                                            placeholder="DD/MM/YYYY"
+                                            error={!!error}
+                                            placeholder="YYYY‑MM‑DD"
                                             onClick={onToggle}
-                                            onChange={() => {}}
                                         />
                                     )}
                                 />
@@ -137,23 +136,22 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                         />
                     </div>
                     <div className={styles.field}>
-                        <label className={styles.label}>Time</label>
+                        <label>Time</label>
                         <Input
                             {...register("time", { required: true })}
                             type="time"
                             error={!!errors.time}
-                            placeholder="--:--"
                         />
                     </div>
                 </div>
 
-                {/* 3-й ряд */}
+                {/* 3. Master */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
                         <FiUser />
                     </div>
                     <div className={styles.field}>
-                        <label className={styles.label}>Master</label>
+                        <label>Master</label>
                         <Controller
                             name="master"
                             control={control}
@@ -168,35 +166,29 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                             )}
                         />
                     </div>
-                    {/* пустая, чтобы сохранить выравнивание */}
-                    {/* <div className={styles.spacer} /> */}
                 </div>
 
-                {/* 4-й ряд: статус */}
+                {/* 4. Status */}
                 <div className={styles.row}>
-                    {/* <div className={styles.spacer} /> */}
                     <div className={styles.statusGroup}>
                         {["new", "confirmed", "paid"].map((s) => (
                             <label key={s} className={styles.radioLabel}>
                                 <input type="radio" value={s} {...register("status")} />
-                                {s[0].toUpperCase() + s.slice(1)}
+                                {s.charAt(0).toUpperCase() + s.slice(1)}
                             </label>
                         ))}
                     </div>
-                    {/* <div className={styles.spacer} /> */}
                 </div>
 
-                {/* 5-й ряд: заметки */}
+                {/* 5. Notes */}
                 <div className={styles.row}>
-                    {/* <div className={styles.spacer} /> */}
                     <div className={styles.notesWrapper}>
-                        <label className={styles.label}>Notes (optional)</label>
+                        <label>Notes (optional)</label>
                         <textarea {...register("notes")} className={styles.textarea} />
                     </div>
-                    {/* <div className={styles.spacer} /> */}
                 </div>
 
-                {/* 6-й ряд: кнопка */}
+                {/* 6. Save */}
                 <div className={styles.footer}>
                     <Button
                         type="submit"

@@ -4,22 +4,18 @@ import styles from "./Input.module.scss";
 
 export function Input({
     value,
-    onChange = () => {},
+    onChange,
     placeholder,
     type = "text",
-    error,
+    error = false,
     ...rest
 }) {
-    const handleChange = (e) => {
-        onChange(e.target.value, e);
-    };
-
     return (
         <input
             {...rest}
             className={cn(styles.input, { [styles["input--error"]]: error })}
             value={value}
-            onChange={handleChange}
+            onChange={onChange}
             placeholder={placeholder}
             type={type}
         />
