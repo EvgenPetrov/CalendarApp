@@ -25,7 +25,7 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
     const eventsByDay = useMemo(() => {
         const m = {};
         apptsRes.data.forEach((a) => {
-            const d = new Date(a.at).getUTCDate();
+            const d = new Date(a.at).getDate();
             (m[d] ||= []).push(a);
         });
         return m;
@@ -34,10 +34,18 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
     const cells = useMemo(() => {
         const firstDow = new Date(cal.year, cal.month, 1).getDay();
         const daysIn = new Date(cal.year, cal.month + 1, 0).getDate();
+
+        // Сколько строк (недель) займёт этот месяц
+        const weekCount = Math.ceil((firstDow + daysIn) / 7);
+        // Итого ячеек
+        const totalCells = weekCount * 7;
+
         const daysPrev = new Date(cal.year, cal.month, 0).getDate();
-        return Array.from({ length: 35 }, (_, i) => {
+
+        return Array.from({ length: totalCells }, (_, i) => {
             const offset = i - firstDow + 1;
             let date, disabled;
+
             if (offset <= 0) {
                 date = new Date(cal.year, cal.month - 1, daysPrev + offset);
                 disabled = true;
@@ -48,9 +56,11 @@ export default function CalendarView({ onDayClick, filters, onFilterClick }) {
                 date = new Date(cal.year, cal.month, offset);
                 disabled = false;
             }
+
             const day = date.getDate();
             const status = disabled ? "closed" : statuses[day - 1] || "working";
             const events = eventsByDay[day] || [];
+
             return { date, day, status, events, disabled };
         });
     }, [cal, statuses, eventsByDay]);

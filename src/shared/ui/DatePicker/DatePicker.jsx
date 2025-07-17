@@ -1,27 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+// DatePicker.jsx
+import React, { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FiCalendar, FiX } from "react-icons/fi";
-import ArrowLeftIcon from "../../icons/arrow-left.svg?react";
-import ArrowRightIcon from "../../icons/arrow-right.svg?react";
 import cn from "classnames";
 import styles from "./DatePicker.module.scss";
-
-function CustomCaption({ date, onPreviousClick, onNextClick }) {
-    return (
-        <div className={styles.caption}>
-            <button onClick={onPreviousClick} className={styles.navPrev}>
-                <ArrowLeftIcon />
-            </button>
-            <span className={styles.captionLabel}>
-                {date.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-            </span>
-            <button onClick={onNextClick} className={styles.navNext}>
-                <ArrowRightIcon />
-            </button>
-        </div>
-    );
-}
 
 export default function DatePicker({
     mode = "range",
@@ -46,14 +29,15 @@ export default function DatePicker({
     }, [open]);
 
     const hasValue = mode === "range" ? range.from && range.to : !!range.from;
-
     const valueLabel = hasValue
         ? mode === "range"
             ? `${range.from.toLocaleDateString("en-GB", {
                   month: "short",
                   day: "numeric",
-              })} – \
-${range.to.toLocaleDateString("en-GB", { month: "short", day: "numeric" })}`
+              })} – ${range.to.toLocaleDateString("en-GB", {
+                  month: "short",
+                  day: "numeric",
+              })}`
             : range.from.toLocaleDateString("en-GB")
         : "";
 
@@ -68,8 +52,7 @@ ${range.to.toLocaleDateString("en-GB", { month: "short", day: "numeric" })}`
     const select = (sel) => {
         if (mode === "range") {
             setRange(sel || { from: null, to: null });
-        } else {
-            // single date: сразу отдаём и закрываем
+        } else if (sel) {
             setRange({ from: sel, to: sel });
             onSelectRange({ from: sel, to: sel });
             setOpen(false);
@@ -87,11 +70,12 @@ ${range.to.toLocaleDateString("en-GB", { month: "short", day: "numeric" })}`
     ) : (
         <button
             type="button"
-            className={cn(styles.toggle, {
-                [styles.activeOutline]: open && !hasValue,
-                [styles.selected]: hasValue,
-                [styles["toggle--error"]]: error,
-            })}
+            className={cn(
+                styles.toggle,
+                { [styles.activeOutline]: open && !hasValue },
+                { [styles.selected]: hasValue },
+                { [styles["toggle--error"]]: error }
+            )}
             onClick={toggle}>
             {hasValue ? (
                 <>
@@ -114,7 +98,12 @@ ${range.to.toLocaleDateString("en-GB", { month: "short", day: "numeric" })}`
                         mode={mode}
                         selected={mode === "range" ? range : range.from}
                         onSelect={select}
-                        components={{ Caption: CustomCaption }}
+                        classNames={{
+                            caption: styles.caption,
+                            caption_label: styles.captionLabel,
+                            navButtonPrev: styles.navPrev,
+                            navButtonNext: styles.navNext,
+                        }}
                     />
 
                     {mode === "range" && (

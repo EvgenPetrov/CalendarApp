@@ -1,9 +1,8 @@
-
+/* DatePicker.module.scss */
 .wrapper {
     position: relative;
     display: inline-block;
 }
-
 
 .toggle {
     display: inline-flex;
@@ -19,16 +18,18 @@
     transition: background 0.2s, border-color 0.2s;
 }
 
-
 .activeOutline {
     border-color: var(--primary-4);
 }
 
-
 .selected {
-    width: auto; 
-    padding: 0 8px; 
+    width: auto;
+    padding: 0 8px;
     background: var(--gray-scale-3);
+}
+
+.toggle--error {
+    border-color: var(--danger-5);
 }
 
 .icon {
@@ -45,7 +46,6 @@
     color: var(--gray-scale-9);
 }
 
-
 .popover {
     position: absolute;
     top: calc(100% + 4px);
@@ -56,20 +56,19 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 10;
     padding-bottom: 16px;
+    padding-top: 10px;
 }
-
 
 .caption {
     display: flex;
     align-items: center;
-    justify-content: space-between; 
-    padding: 10px 27px 5px 27px;
-    width: 100%;
+    justify-content: space-between;
+    padding: 10px 27px 5px;
 }
 
 .captionLabel {
-    flex: 1; 
-    text-align: center; 
+    flex: 1;
+    text-align: center;
     font-family: var(--font-primary);
     font-weight: 600;
     font-size: 14px;
@@ -77,26 +76,18 @@
     margin: 0;
 }
 
-.navPrev,
-.navNext {
-    flex: 0 0 auto;
-    width: 34px;
-    height: 34px;
-    border: 1px solid var(--primary-6);
-    border-radius: 50%;
-    background: var(--gray-scale-1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.navPrev {
-    margin-right: 0;
-}
-.navNext {
-    margin-left: 0;
-}
+// .navPrev,
+// .navNext {
+//     width: 34px;
+//     height: 34px;
+//     border: 1px solid var(--primary-6);
+//     border-radius: 50%;
+//     background: var(--gray-scale-1);
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     cursor: pointer;
+// }
 
 .navPrev svg,
 .navNext svg {
@@ -104,7 +95,6 @@
     height: 9px;
     stroke: var(--primary-6);
 }
-
 
 .actions {
     display: flex;
@@ -137,4 +127,43 @@
 .submit:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+:global {
+    .rdp-range_start .rdp-day_button {
+        background-color: var(--primary-6);
+        border: none;
+        border-radius: 7px 0 0 7px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .rdp-range_end .rdp-day_button {
+        background-color: var(--primary-6);
+        border: none;
+        border-radius: 0 7px 7px 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    .rdp-in-range .rdp-day_button {
+        background-color: var(--gray-scale-2);
+    }
+
+    .rdp-day_button:hover {
+        background-color: var(--gray-scale-3);
+    }
+
+    .rdp-day {
+        font-family: var(--font-primary);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 143%;
+        text-align: center;
+        color: var(--gray-scale-6);
+    }
+
+    .rdp-selected {
+        color: #215491;
+    }
 }

@@ -10,6 +10,7 @@ import PlusIcon from "../../shared/icons/icon-24px-plus.svg?react";
 import ViewToggle from "../../shared/ui/ViewToggle/ViewToggle";
 import styles from "./MainPage.module.scss";
 
+
 export default function MainPage() {
     const [view, setView] = useState("calendar");
     const [eventOpen, setEventOpen] = useState(false);
