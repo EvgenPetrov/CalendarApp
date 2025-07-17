@@ -1,4 +1,4 @@
-import  { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useDayStatuses, useAppointments } from "../../app/api/hooks";
 import MonthNavigator from "../../shared/ui/MonthNavigator/MonthNavigator";
 import DayCell from "./DayCell";
