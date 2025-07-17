@@ -37,9 +37,22 @@
     font-family: var(--font-primary);
     font-size: 14px;
     color: var(--gray-scale-9);
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &::placeholder {
         color: var(--gray-scale-6);
+    }
+
+    &:hover {
+        border-color: var(--primary-3);
+    }
+    &:focus {
+        outline: none;
+        border-color: var(--primary-5);
+        box-shadow: 0 0 0 4px rgba(31, 81, 229, 0.08);
+    }
+    &:active {
+        border-color: var(--primary-5);
     }
 }
 

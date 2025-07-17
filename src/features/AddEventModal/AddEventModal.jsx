@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
-import { Input } from "../../shared/ui/Input/Input";
+import { Input, Textarea } from "../../shared/ui/Input/Input";
 import { Select } from "../../shared/ui/Select/Select";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import { Button } from "../../shared/ui/Button/Button";
@@ -182,7 +182,17 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 <div className={styles.row}>
                     <div className={styles.notesWrapper}>
                         <label>Notes (optional)</label>
-                        <textarea {...register("notes")} className={styles.textarea} />
+                        <Controller
+                            name="notes"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    error={!!errors.notes}
+                                    placeholder="Enter here"
+                                />
+                            )}
+                        />
                     </div>
                 </div>
 
