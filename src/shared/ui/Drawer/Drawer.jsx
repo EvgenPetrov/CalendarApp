@@ -1,14 +1,12 @@
-
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 import styles from "./Drawer.module.scss";
 
 export function Drawer({ isOpen, onClose, title, children }) {
     return (
-        <AnimatePresence initial={false} exitBeforeEnter>
+        <AnimatePresence exitBeforeEnter>
             {isOpen && (
                 <>
-                   
                     <Motion.div
                         className={styles.backdrop}
                         initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
@@ -18,7 +16,6 @@ export function Drawer({ isOpen, onClose, title, children }) {
                         onClick={onClose}
                     />
 
-                    
                     <Motion.aside
                         className={styles.drawer}
                         initial={{ x: "100%" }}
@@ -43,7 +40,6 @@ export function Drawer({ isOpen, onClose, title, children }) {
                             </button>
                         </header>
 
-                        
                         <Motion.div
                             className={styles.body}
                             initial={{ opacity: 0 }}

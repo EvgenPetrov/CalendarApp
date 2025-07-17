@@ -74,6 +74,10 @@ input:focus,
     font-size: 14px;
     cursor: pointer;
     box-sizing: border-box;
+
+    &:has(input:checked) {
+        border-color: var(--primary-5);
+    }
 }
 .radioLabel input {
     margin-right: 8px;
@@ -105,4 +109,56 @@ input:focus,
     width: 100%;
     height: 44px;
     display: block;
+}
+
+.timeWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* прячем дефолтный значок часов */
+.timeWrapper input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+.timeWrapper input[type="time"]::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* само поле времени */
+.timeField {
+    width: 100%;
+    height: 44px;
+    padding: 12px 8px;
+    padding-right: 48px; /* место для AM/PM */
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:hover:not(.control--error) {
+        border-color: var(--primary-3);
+    }
+    &:focus {
+        outline: none;
+        border-color: var(--primary-5);
+        box-shadow: 0 0 0 4px rgba(31, 81, 229, 0.08);
+    }
+    &:active {
+        border-color: var(--primary-5);
+    }
+}
+
+/* суффикс AM/PM */
+.period {
+    position: absolute;
+    top: 50%;
+    // right: 12px;
+    left: 52px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--gray-scale-6);
 }

@@ -1,10 +1,11 @@
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
 import { Input, Textarea } from "../../shared/ui/Input/Input";
 import { Select } from "../../shared/ui/Select/Select";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import { Button } from "../../shared/ui/Button/Button";
-import { FiUser, FiClock, FiUsers } from "react-icons/fi";
+import { FiUsers, FiUser } from "react-icons/fi";
 import {
     useCreateAppointment,
     useInfiniteMasters,
@@ -21,8 +22,6 @@ function formatLocalDate(date) {
 
 export default function AddEventModal({ isOpen, onClose, initialDate }) {
     const create = useCreateAppointment();
-
-    // defaultAt пересчитывается на каждый монт/рендер
     const defaultAt = formatLocalDate(initialDate || new Date());
 
     const {
@@ -31,6 +30,7 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
         handleSubmit,
         formState: { errors, isValid },
     } = useForm({
+        mode: "onChange",
         defaultValues: {
             customerName: "",
             service: null,
@@ -40,7 +40,6 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
             status: "new",
             notes: "",
         },
-        mode: "onChange",
     });
 
     const onSubmit = (vals) => {
@@ -57,11 +56,7 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 status: vals.status,
                 notes: vals.notes || null,
             },
-            {
-                onSuccess: () => {
-                    onClose();
-                },
-            }
+            { onSuccess: onClose }
         );
     };
 
@@ -102,8 +97,10 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 {/* 2. Date + Time */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
-                        <FiClock />
+                        <FiUser />
                     </div>
+
+                    {/* Date */}
                     <div className={styles.field}>
                         <label>Date</label>
                         <Controller
@@ -124,8 +121,8 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                                         <Input
                                             value={value}
                                             readOnly
-                                            error={!!error}
                                             placeholder="YYYY‑MM‑DD"
+                                            error={!!error}
                                             onClick={onToggle}
                                         />
                                     )}
@@ -133,12 +130,17 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                             )}
                         />
                     </div>
+
+                    {/* Time */}
                     <div className={styles.field}>
                         <label>Time</label>
-                        <Input
-                            {...register("time", { required: true })}
-                            type="time"
-                            error={!!errors.time}
+                        <Controller
+                            name="time"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <TimeInput field={field} error={!!errors.time} />
+                            )}
                         />
                     </div>
                 </div>
@@ -182,16 +184,10 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 <div className={styles.row}>
                     <div className={styles.notesWrapper}>
                         <label>Notes (optional)</label>
-                        <Controller
-                            name="notes"
-                            control={control}
-                            render={({ field }) => (
-                                <Textarea
-                                    {...field}
-                                    error={!!errors.notes}
-                                    placeholder="Enter here"
-                                />
-                            )}
+                        <Textarea
+                            {...register("notes")}
+                            placeholder="Enter here"
+                            error={!!errors.notes}
                         />
                     </div>
                 </div>
@@ -207,5 +203,32 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 </div>
             </form>
         </Drawer>
+    );
+}
+
+
+function TimeInput({ field }) {
+    
+    const [period, setPeriod] = useState("AM");
+
+    const handleBlur = (e) => {
+        field.onBlur();
+        const v = e.target.value; // "HH:MM"
+        const [h] = v.split(":").map(Number);
+        setPeriod(h >= 12 ? "PM" : "AM");
+    };
+
+    return (
+        <div className={styles.timeWrapper}>
+            <input
+                {...field}
+                type="time"
+                className={styles.timeField}
+                placeholder="11:00"
+                onChange={(e) => field.onChange(e.target.value)}
+                onBlur={handleBlur}
+            />
+            <span className={styles.period}>{period}</span>
+        </div>
     );
 }
