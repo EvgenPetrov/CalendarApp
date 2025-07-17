@@ -27,7 +27,6 @@ export function useAppointments({
     page,
     perPage,
 }) {
-    
     const params = { page, perPage };
     if (since) params.since = since;
     if (until) params.until = until;

@@ -1,17 +1,16 @@
-import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
 import { Input } from "../../shared/ui/Input/Input";
 import { Select } from "../../shared/ui/Select/Select";
 import DatePicker from "../../shared/ui/DatePicker/DatePicker";
 import { Button } from "../../shared/ui/Button/Button";
-import { FiUser, FiCalendar } from "react-icons/fi";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { useInfiniteMasters, useInfiniteServices } from "../../app/api/hooks";
-import axios from "axios";
+import { FiUser, FiClock, FiUsers } from "react-icons/fi";
+import {
+    useCreateAppointment,
+    useInfiniteMasters,
+    useInfiniteServices,
+} from "../../app/api/hooks";
 import styles from "./AddEventModal.module.scss";
-
-const api = axios.create({ baseURL: "http://localhost:4000" });
 
 function formatLocalDate(date) {
     const y = date.getFullYear();
@@ -21,7 +20,7 @@ function formatLocalDate(date) {
 }
 
 export default function AddEventModal({ isOpen, onClose, initialDate }) {
-    const qc = useQueryClient();
+    const create = useCreateAppointment();
 
     // defaultAt пересчитывается на каждый монт/рендер
     const defaultAt = formatLocalDate(initialDate || new Date());
@@ -44,27 +43,26 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
         mode: "onChange",
     });
 
-    const create = useMutation({
-        mutationFn: (data) => api.post("/appointments", data).then((r) => r.data.data),
-        onSuccess: () => {
-            qc.invalidateQueries(["appointments"]);
-            qc.invalidateQueries(["dayStatuses"]);
-            onClose();
-        },
-    });
-
     const onSubmit = (vals) => {
         const [y, m, d] = vals.at.split("-").map(Number);
         const [h, mi] = vals.time.split(":").map(Number);
         const atIso = new Date(y, m - 1, d, h, mi).toISOString();
-        create.mutate({
-            customerName: vals.customerName,
-            serviceId: vals.service.id,
-            masterId: vals.master.id,
-            at: atIso,
-            status: vals.status,
-            notes: vals.notes || null,
-        });
+
+        create.mutate(
+            {
+                customerName: vals.customerName,
+                serviceId: vals.service.id,
+                masterId: vals.master.id,
+                at: atIso,
+                status: vals.status,
+                notes: vals.notes || null,
+            },
+            {
+                onSuccess: () => {
+                    onClose();
+                },
+            }
+        );
     };
 
     return (
@@ -73,7 +71,7 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 {/* 1. Customer + Service */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
-                        <FiUser />
+                        <FiUsers />
                     </div>
                     <div className={styles.field}>
                         <label>Customer</label>
@@ -104,7 +102,7 @@ export default function AddEventModal({ isOpen, onClose, initialDate }) {
                 {/* 2. Date + Time */}
                 <div className={styles.row}>
                     <div className={styles.icon}>
-                        <FiCalendar />
+                        <FiClock />
                     </div>
                     <div className={styles.field}>
                         <label>Date</label>

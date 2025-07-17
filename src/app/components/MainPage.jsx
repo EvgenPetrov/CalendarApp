@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import CalendarView from "../../features/CalendarView/CalendarView";
 import ListView from "../../features/ListView/ListView";
 import AddEventModal from "../../features/AddEventModal/AddEventModal";
@@ -6,6 +6,7 @@ import Filters from "../../features/ListView/Filters";
 import { Drawer } from "../../shared/ui/Drawer/Drawer";
 import { Button } from "../../shared/ui/Button/Button";
 import { FiPlus } from "react-icons/fi";
+import PlusIcon from "../../shared/icons/icon-24px-plus.svg?react";
 import ViewToggle from "../../shared/ui/ViewToggle/ViewToggle";
 import styles from "./MainPage.module.scss";
 
@@ -38,7 +39,7 @@ export default function MainPage() {
                 <header className={styles.header}>
                     <ViewToggle view={view} onChange={setView} />
                     <Button variant="primary" onClick={() => openNewEvent()}>
-                        <FiPlus /> <span>Add event</span>
+                        <PlusIcon className={styles.Button} /> <span>Add event</span>
                     </Button>
                 </header>
 
@@ -56,7 +57,6 @@ export default function MainPage() {
                 )}
             </div>
 
-           
             <AddEventModal
                 key={initialDate ? initialDate.toISOString() : "today"}
                 isOpen={eventOpen}

@@ -7,7 +7,7 @@
     font-family: var(--font-primary);
     font-weight: 600;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 143%;
     cursor: pointer;
 
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
@@ -16,7 +16,7 @@
 .btn--primary {
     background-color: var(--primary-5);
     border: 1px solid var(--primary-5);
-    color: #fff;
+    color: var(--gray-scale-1);
 
     padding: 12px 16px;
     height: 44px;
@@ -49,8 +49,8 @@
 }
 
 .icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
 }
 

@@ -1,6 +1,5 @@
-import { FiSliders } from "react-icons/fi";
-import navStyles from "../MonthNavigator/MonthNavigator.module.scss";
 import styles from "./ViewHeader.module.scss";
+import FiltersIcon from "src/shared/icons/filters.svg?react";
 
 export default function ViewHeader({ leftControls, title, onFilterClick }) {
     return (
@@ -9,8 +8,8 @@ export default function ViewHeader({ leftControls, title, onFilterClick }) {
                 {leftControls}
                 {title && <h2 className={styles.title}>{title}</h2>}
             </div>
-            <button className={navStyles.filter} onClick={onFilterClick}>
-                <FiSliders />
+            <button className={styles.filter} onClick={onFilterClick}>
+                <FiltersIcon className={styles.filterIcon} />
                 <span>Filters</span>
             </button>
         </div>

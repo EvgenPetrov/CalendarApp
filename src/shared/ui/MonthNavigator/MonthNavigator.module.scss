@@ -34,35 +34,3 @@
         color: var(--primary-5);
     }
 }
-
-.filter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px 8px 8px;
-    width: 101px;
-    height: 38px;
-    background-color: var(--gray-scale-1);
-    border: 1px solid var(--primary-7);
-    border-radius: 4px;
-
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    color: var(--primary-7);
-
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-
-    svg {
-        width: 16px;
-        height: 16px;
-        color: var(--primary-7);
-    }
-
-    &:hover {
-        background-color: var(--gray-scale-2);
-        border-color: var(--primary-5);
-    }
-}
