@@ -1,0 +1,59 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 143%;
+    cursor: pointer;
+
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn--primary {
+    background-color: var(--primary-5);
+    border: 1px solid var(--primary-5);
+    color: var(--gray-scale-1);
+
+    padding: 12px 16px;
+    height: 44px;
+    border-radius: 4px;
+
+    &:hover:not(:disabled) {
+        background-color: var(--primary-6);
+        border-color: var(--primary-6);
+    }
+}
+
+.btn--ghost {
+    background-color: var(--gray-scale-2);
+    border: 1px solid var(--gray-scale-4);
+    color: var(--gray-scale-6);
+
+    padding: 8px 16px;
+    height: 38px;
+    border-radius: 4px;
+
+    &:hover:not(:disabled) {
+        background-color: var(--gray-scale-1);
+        border-color: var(--gray-scale-4);
+    }
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.label {
+    white-space: nowrap;
+}

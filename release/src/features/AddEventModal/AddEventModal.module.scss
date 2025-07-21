@@ -1,0 +1,164 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+    gap: 16px;
+}
+
+.icon {
+    flex: 0 0 32px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-1);
+    border-radius: 6px;
+}
+
+.field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.spacer {
+    flex: 0 0 32px;
+}
+
+.label {
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--gray-scale-9);
+}
+
+input[type="text"],
+input[type="time"],
+:global(.select__input) {
+    width: 100%;
+    // height: 44px;
+    padding: 12px 8px;
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+input:focus,
+:global(.select__input:focus) {
+    outline: none;
+    border-color: var(--primary-4);
+}
+
+.statusGroup {
+    flex: 1;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+/* Радио‑метки */
+.radioLabel {
+    display: inline-flex;
+    align-items: center;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:has(input:checked) {
+        border-color: var(--primary-5);
+    }
+}
+.radioLabel input {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.notesWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.textarea {
+    width: 100%;
+    height: 100px;
+    padding: 12px 16px;
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.footer {
+    margin-top: auto;
+    padding-bottom: 32px;
+}
+.footer :global(button) {
+    width: 100%;
+    height: 44px;
+    display: block;
+}
+
+.timeWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* прячем дефолтный значок часов */
+.timeWrapper input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+.timeWrapper input[type="time"]::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* само поле времени */
+.timeField {
+    width: 100%;
+    height: 44px;
+    padding: 12px 8px;
+    padding-right: 48px; /* место для AM/PM */
+    border: 1px solid var(--gray-scale-4);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:hover:not(.control--error) {
+        border-color: var(--primary-3);
+    }
+    &:focus {
+        outline: none;
+        border-color: var(--primary-5);
+        box-shadow: 0 0 0 4px rgba(31, 81, 229, 0.08);
+    }
+    &:active {
+        border-color: var(--primary-5);
+    }
+}
+
+/* суффикс AM/PM */
+.period {
+    position: absolute;
+    top: 50%;
+    // right: 12px;
+    left: 52px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--gray-scale-6);
+}

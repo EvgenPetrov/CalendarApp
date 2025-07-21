@@ -1,0 +1,36 @@
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--primary-7);
+}
+
+.arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.arrow {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+
+    svg {
+        width: 24px;
+        height: 24px;
+        color: var(--gray-scale-9);
+    }
+    &:hover svg {
+        color: var(--primary-5);
+    }
+}

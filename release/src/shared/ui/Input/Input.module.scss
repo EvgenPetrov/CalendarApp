@@ -1,0 +1,33 @@
+.control {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 8px;
+    border: 1px solid var(--gray-scale-5);
+    border-radius: 4px;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+
+    &:hover:not(.control--error) {
+        border-color: var(--primary-3);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--primary-5);
+        box-shadow: 0 0 0 4px rgba(31, 81, 229, 0.08);
+    }
+
+    &:active {
+        border-color: var(--primary-5);
+    }
+}
+
+.control--error {
+    border-color: var(--red-6) !important;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 100px;
+}
